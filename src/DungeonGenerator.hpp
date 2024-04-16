@@ -1,12 +1,13 @@
 
 #include <raylib-cpp.hpp>
+#include "Dungeon.hpp"
 
 /**
  * 
  * @brief Abstract class for generating dungeons.
  * 
 */
-class DunegonGenerator {
+class DungeonGenerator {
 
     public:
 

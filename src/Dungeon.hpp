@@ -1,5 +1,7 @@
 #include "TileSet.hpp"
 
+#pragma once
+
 /**
  * @brief Basic class for a dungeon.
  * 
