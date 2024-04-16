@@ -10,6 +10,16 @@ Dungeon::Dungeon(int width, int height, int *tiles, TileSet tileSet)
 
 }
 
+Dungeon::Dungeon()
+{
+
+    width = 0;
+    height = 0;
+    tiles = nullptr;
+    tileSet = TileSet();
+
+}
+
 Dungeon::~Dungeon()
 {
 
@@ -26,7 +36,7 @@ void Dungeon::render()
 
             Tile tile = tileSet.getTile(tiles[y * width + x]);
 
-            tile.texture->Draw(x * 16, y * 16);
+            DrawTexture(tile.texture, x * tile.texture.width, y * tile.texture.height, WHITE);
 
         }
 

@@ -28,9 +28,9 @@ TileSet::TileSet(char * path, int size)
             raylib::Image tileImage = texture.Copy();
             tileImage.Crop(source);
 
-            raylib::Texture tileTexture = tileImage.LoadTexture();
 
-            addTile(&tileTexture, false);
+
+            addTile(tileImage.LoadTexture(), false);
 
         }
 
@@ -38,7 +38,14 @@ TileSet::TileSet(char * path, int size)
 
 }
 
-void TileSet::addTile(raylib::Texture* texture, bool solid)
+TileSet::~TileSet()
+{
+
+    // Do nothing.
+
+}
+
+void TileSet::addTile(Texture2D texture, bool solid)
 {
 
     Tile tile;
@@ -47,4 +54,10 @@ void TileSet::addTile(raylib::Texture* texture, bool solid)
 
     tiles.push_back(tile);
 
+}
+
+Tile& TileSet::getTile(int index)
+{
+    
+    return tiles[index];
 }

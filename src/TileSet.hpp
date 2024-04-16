@@ -7,7 +7,7 @@
 */
 struct Tile {
 
-    raylib::Texture* texture;
+    Texture2D texture;
     bool solid;
 
 };
@@ -33,12 +33,12 @@ class TileSet {
         /**
          * @brief Add a tile to the tile set.
         */
-        void addTile(raylib::Texture* texture, bool solid);
+        void addTile(Texture2D texture, bool solid);
 
         /**
          * @brief Get a tile from the tile set.
         */
-        Tile getTile(int index);
+        Tile& getTile(int index);
 
     private:
 

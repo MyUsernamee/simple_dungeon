@@ -11,6 +11,7 @@ class Dungeon {
     public:
 
         Dungeon(int width, int height, int* tiles, TileSet tileSet);
+        Dungeon();
         ~Dungeon();
 
         /**
