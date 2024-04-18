@@ -23,7 +23,7 @@ Dungeon::Dungeon()
 Dungeon::~Dungeon()
 {
 
-    delete[] tiles;
+    //delete[] tiles;
 
 }
 
@@ -33,6 +33,8 @@ void Dungeon::render()
     for (int y = 0; y < height; y++) {
 
         for (int x = 0; x < width; x++) {
+
+            if (tiles[y * width + x] == -1) continue;
 
             Tile tile = tileSet.getTile(tiles[y * width + x]);
 

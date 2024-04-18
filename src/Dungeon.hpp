@@ -21,7 +21,7 @@ class Dungeon {
 
         // TOOD: Add getters and setters for everything.
 
-    private:
+    
 
         int width;
         int height;

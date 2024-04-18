@@ -13,6 +13,13 @@ TileSet::TileSet(char * path, int size)
 
     tiles = std::vector<Tile>();
 
+    load(path, size);
+
+}
+
+void TileSet::load(char * path, int size)
+{
+
     int width, height;
 
     raylib::Image texture = raylib::LoadImage(path);

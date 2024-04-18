@@ -12,6 +12,7 @@ file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS src/*.cpp)
 
 include_directories(src) # No include directory today lmao.
 include_directories(dependencies/raylib-cpp/include)
+include_directories(dependencies/voronoi/src)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
