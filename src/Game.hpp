@@ -1,5 +1,5 @@
 
-#include <vector>
+#include <entt/entt.hpp>
 
 class Game {
 
@@ -15,7 +15,6 @@ class Game {
 
     private:
 
-        std::vector<Player> players;
-        std::vector<Enemy> enemies;
+        entt::registry registry;
 
 };

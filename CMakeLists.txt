@@ -13,6 +13,7 @@ file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS src/*.cpp)
 include_directories(src) # No include directory today lmao.
 include_directories(dependencies/raylib-cpp/include)
 include_directories(dependencies/voronoi/src)
+include_directories(dependencies/entt/src) # Header only library ECS :)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 

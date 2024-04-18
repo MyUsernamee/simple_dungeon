@@ -1,7 +1,5 @@
 #include <raylib-cpp.hpp>
-#include "TileSet.hpp"
-#include "SimpleDungeonGenerator.hpp"
-#include "Dungeon.hpp"
+#include "Game.hpp"
 
 int main () {
 
