@@ -3,16 +3,21 @@
 
 #include <entt/entt.hpp>
 
-class renderable {
+class Renderer {
 
     public:
 
         virtual void render(const entt::registry& registry, const entt::entity& entity) = 0; // Pure virtual function
 
-        int z;
-
     private:
 
         // Do nothing
+
+};
+
+struct renderable {
+
+    Renderer* renderer;
+    int z;
 
 };
