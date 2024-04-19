@@ -9,7 +9,9 @@
 
 int main () {
 
-    raylib::Window w(800, 450, "Hello, World!");
+    raylib::Window w(GetScreenWidth(), GetScreenHeight(), "Dungeon Generator");
+
+    w.SetFullscreen(true);
     
 
     SetTargetFPS(60);

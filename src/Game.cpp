@@ -38,6 +38,22 @@ Game::Game()
     registry.emplace<Size>(entity2, raylib::Vector2(50, 50));
     registry.emplace<Collision>(entity2, 0b1);
 
+    // For stress testing lets add a bunch of entities
+    // for (int i = 0; i < 200; i++) {
+
+    //     auto entity = registry.create();
+    //     auto& renderable_ = registry.emplace<renderable>(entity);
+
+    //     renderable_.renderer = new SquareRenderer(raylib::Color(255, 0, 0, 255));
+    //     renderable_.z = 0;
+
+    //     registry.emplace<Position>(entity, raylib::Vector2(GetRandomValue(0, GetRenderWidth()), GetRandomValue(0, GetRenderHeight())));
+    //     registry.emplace<Velocity>(entity, raylib::Vector2(GetRandomValue(-100, 100), GetRandomValue(-100, 100)));
+    //     registry.emplace<Size>(entity, raylib::Vector2(50, 50));
+    //     registry.emplace<Collision>(entity, 1);
+
+    // }
+
     // createPlayer(registry, raylib::Color(255, 0, 0, 255), -1);
 
 }
@@ -79,6 +95,19 @@ void Game::render()
     }
 
     camera.EndMode();
+
+    // Get everyplayer
+    auto new_view = registry.view<Player, renderable>();
+
+    for (auto entity : new_view) {
+
+        auto& player = new_view.get<Player>(entity);
+        auto& renderable_ = new_view.get<renderable>(entity);
+
+        // Convert the renderer to a player renderer
+        dynamic_cast<PlayerRenderer*>(renderable_.renderer)->statsRenderer(registry, entity);
+
+    }
 
 }
 

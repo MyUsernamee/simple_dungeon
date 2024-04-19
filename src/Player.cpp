@@ -1,5 +1,6 @@
 #include "Player.hpp"
 #include "Components.hpp"
+#include "consts.hpp"
 
 void playerSystem(entt::registry &registry)
 {
@@ -53,10 +54,36 @@ entt::entity createPlayer(entt::registry &registry, raylib::Color color, int gam
     registry.emplace<Velocity>(player, raylib::Vector2(0, 0));
     registry.emplace<Size>(player, raylib::Vector2(32, 32));
     registry.emplace<Collision>(player, 0b1);
-    registry.emplace<Player>(player, raylib::Color(255, 0, 0, 255), gamepad);
+    registry.emplace<Player>(player, color, gamepad);
     registry.emplace<CameraFollower>(player, 1, raylib::Vector2(25, 25));
 
     return player;
+}
+
+void PlayerRenderer::statsRenderer(entt::registry &registry, const entt::entity &entity)
+{
+
+    int width = (GetRenderWidth() - PADDING * 2) / 4;
+    int height = 50; // TODO: Make this a constant / variable
+    int y_offset = GetRenderHeight() - PADDING - height; // TODO: Make this a constant / variable
+    int offset = registry.get<Player>(entity).gamepad + 1;
+
+    auto &player = registry.get<Player>(entity);
+
+    DrawRectangle(PADDING + offset * width, y_offset, width, height, raylib::Color(125 + player.color.r / 2, 125 + player.color.g / 2, 125 + player.color.b / 2, 255));
+    DrawRectangleLines(PADDING + offset * width, y_offset, width, height, raylib::Color(0, 0, 0, 255));
+    DrawText(TextFormat("Player %i", player.gamepad + 1), PADDING + offset * width + 10, y_offset + 10, 5, BLACK);
+
+    // Draw the players sprite
+    DrawTexturePro(
+        idleAnimation.getFrame(0),
+        Rectangle{0, 0, (float)idleAnimation.getFrame(0).width, (float)idleAnimation.getFrame(0).height},
+        Rectangle{(float)PADDING + offset * width, (float)y_offset + height - PADDING - 8, 16, 16},
+        raylib::Vector2(0, 0),
+        0,
+        player.color
+    );
+
 }
 
 raylib::Vector2 getMovementVector(int gamepad) {
@@ -65,7 +92,7 @@ raylib::Vector2 getMovementVector(int gamepad) {
 
     if (gamepad == -1) {
 
-        if (IsKeyDown(KEY_W)) movement.y -= 1;
+        if (IsKeyDown(KEY_W)) movement.y -= 1; // TODO: Create a key map / joystick map
         if (IsKeyDown(KEY_S)) movement.y += 1;
         if (IsKeyDown(KEY_A)) movement.x -= 1;
         if (IsKeyDown(KEY_D)) movement.x += 1;

@@ -27,6 +27,7 @@ class PlayerRenderer : public Renderer {
         ~PlayerRenderer();
 
         void render(const entt::registry& registry, const entt::entity& entity) override; // TODO: Implement this
+        void statsRenderer(entt::registry& registry, const entt::entity& entity);
 
     private:
 
