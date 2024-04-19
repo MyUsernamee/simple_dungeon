@@ -10,7 +10,7 @@
 int main () {
 
     raylib::Window w(GetScreenWidth(), GetScreenHeight(), "Dungeon Generator");
-
+    
     w.SetFullscreen(true);
     
 

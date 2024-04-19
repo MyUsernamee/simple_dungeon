@@ -1,6 +1,7 @@
 
 #include <entt/entt.hpp>
 #include <raylib-cpp.hpp>
+#include "Dungeon.hpp"
 
 class Game {
 
@@ -12,7 +13,7 @@ class Game {
         void render();
         void update(double dt);
 
-        // TODO: Implement collision.
+        
         void physicsSystem(double dt);
         void collisionSystem();
         void cameraFollowerSystem();
@@ -20,10 +21,12 @@ class Game {
         entt::registry& getRegistry() {
             return registry;
         }
+        
 
     private:
 
         entt::registry registry;
         raylib::Camera2D camera;
+        Dungeon currentDungeon;
 
 };

@@ -56,6 +56,8 @@ entt::entity createPlayer(entt::registry &registry, raylib::Color color, int gam
     registry.emplace<Collision>(player, 0b1);
     registry.emplace<Player>(player, color, gamepad);
     registry.emplace<CameraFollower>(player, 1, raylib::Vector2(25, 25));
+    registry.emplace<Health>(player, 100, 100);
+    registry.emplace<Team>(player, 0b01);
 
     return player;
 }
@@ -66,9 +68,13 @@ void PlayerRenderer::statsRenderer(entt::registry &registry, const entt::entity 
     int width = (GetRenderWidth() - PADDING * 2) / 4;
     int height = 50; // TODO: Make this a constant / variable
     int y_offset = GetRenderHeight() - PADDING - height; // TODO: Make this a constant / variable
+    int y_end = GetRenderHeight() - PADDING;
     int offset = registry.get<Player>(entity).gamepad + 1;
+    int x_end = offset * width + width;
+    int x_offset = offset * width;
 
     auto &player = registry.get<Player>(entity);
+    auto &health = registry.get<Health>(entity);
 
     DrawRectangle(PADDING + offset * width, y_offset, width, height, raylib::Color(125 + player.color.r / 2, 125 + player.color.g / 2, 125 + player.color.b / 2, 255));
     DrawRectangleLines(PADDING + offset * width, y_offset, width, height, raylib::Color(0, 0, 0, 255));
@@ -83,6 +89,9 @@ void PlayerRenderer::statsRenderer(entt::registry &registry, const entt::entity 
         0,
         player.color
     );
+
+    DrawRectangle(x_end - PADDING - width / 2, y_offset + PADDING, width / 2, 10, raylib::Color(255, 80, 80, 255));
+    DrawRectangle(x_end - PADDING - width / 2, y_offset + PADDING, width / 2 * health.health / health.maxHealth, 10, raylib::Color(80, 255, 80, 255));
 
 }
 

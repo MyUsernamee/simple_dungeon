@@ -1,5 +1,8 @@
 
 #include <raylib-cpp.hpp>
+#include <entt/entt.hpp>
+
+#pragma once
 
 struct Position {
 
@@ -38,9 +41,38 @@ struct CameraFollower {
 
 };
 
-struct Health {
+class Health {
 
-    int health;
-    int maxHealth;
+    public:
+
+        Health(int health, int maxHealth);
+
+        int health;
+        int maxHealth;
+        entt::sigh<void()> onDamage;
+        entt::sigh<void()> onDeath;
+        void takeDamage(int damage);
+
+};
+
+struct AI {
+
+    double speed;
+    raylib::Vector2 movement;
+
+};
+
+struct Team {
+
+    int teamBitMask; // Bitmask for team If these are & together and they are not 0 then they are on the same team. and should not attack each other.
+
+};
+
+struct MeleeEnemy {
+
+    int attackSpeed;
+    int attackTimer;
+    double range;
+    int damage;
 
 };

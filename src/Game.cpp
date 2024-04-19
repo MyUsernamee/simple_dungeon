@@ -5,6 +5,9 @@
 #include <raylib-cpp.hpp>
 #include "Components.hpp"
 #include "Player.hpp"
+#include "AI.hpp"
+#include "Enemy.hpp"
+#include "Health.hpp"
 
 Game::Game()
 {
@@ -24,6 +27,10 @@ Game::Game()
     registry.emplace<Position>(entity, raylib::Vector2(200, 100));
     registry.emplace<Velocity>(entity, raylib::Vector2(-100, 0));
     registry.emplace<Size>(entity, raylib::Vector2(50, 50));
+    registry.emplace<Health>(entity, 100, 100);
+    registry.emplace<AI>(entity, 50.0, raylib::Vector2(0, 0));
+    registry.emplace<MeleeEnemy>(entity, 60, 0, 80.0, 10);
+    registry.emplace<Team>(entity, 0b10);
     registry.emplace<Collision>(entity, 1);
 
     // We add another one
@@ -55,6 +62,8 @@ Game::Game()
     // }
 
     // createPlayer(registry, raylib::Color(255, 0, 0, 255), -1);
+
+    
 
 }
 
@@ -126,6 +135,9 @@ void Game::update(double dt)
     collisionSystem();
     playerSystem(registry);
     cameraFollowerSystem();
+    aiSystem(registry);
+    meleeSystem(registry);
+    healthSystem(registry);
     
 
 }
