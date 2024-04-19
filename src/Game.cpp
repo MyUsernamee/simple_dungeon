@@ -147,7 +147,7 @@ void Game::cameraFollowerSystem()
         auto& position = view.get<Position>(entity);
         auto& cameraFollower = view.get<CameraFollower>(entity);
 
-        average += position.position + cameraFollower.offset;
+        average += position.position + cameraFollower.offset; // TODO: Take into account strength
 
     }
 
