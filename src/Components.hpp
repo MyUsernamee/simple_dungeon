@@ -37,3 +37,10 @@ struct CameraFollower {
     raylib::Vector2 offset;
 
 };
+
+struct Health {
+
+    int health;
+    int maxHealth;
+
+};

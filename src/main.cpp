@@ -33,7 +33,8 @@ int main () {
         Rectangle window_rect = (Rectangle){ w.GetWidth() - 200 - DEBUG_PADDING, DEBUG_PADDING, 200, w.GetHeight() - 2 * DEBUG_PADDING };
         GuiWindowBox(window_rect, "Debug Information");
 
-        // We are going 
+        // We are going display all entites and their components
+        // auto view = game.getRegistry()
 
 
         #endif

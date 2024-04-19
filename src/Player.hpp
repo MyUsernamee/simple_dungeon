@@ -3,6 +3,7 @@
 #include <raylib-cpp.hpp>
 #include <entt/entt.hpp>
 #include "renderable.hpp"
+#include "Animation.hpp"
 
 // TODO: Organize components and systems in a better way.
 
@@ -14,12 +15,14 @@ struct Player {
 };
 
 void playerSystem(entt::registry& registry);
+entt::entity createPlayer(entt::registry& registry, raylib::Color color, int gamepad);
 raylib::Vector2 getMovementVector(int gamepad);
 
 class PlayerRenderer : public Renderer {
 
     public:
 
+        //TODO: PLEASE ADD DOC STRINGS AND COMMENTS
         PlayerRenderer(raylib::Color color);
         ~PlayerRenderer();
 
@@ -28,5 +31,7 @@ class PlayerRenderer : public Renderer {
     private:
 
         raylib::Color color;
+        Animation idleAnimation;
+        Animation runAnimation;
 
 };

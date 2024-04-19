@@ -17,6 +17,10 @@ class Game {
         void collisionSystem();
         void cameraFollowerSystem();
 
+        entt::registry& getRegistry() {
+            return registry;
+        }
+
     private:
 
         entt::registry registry;

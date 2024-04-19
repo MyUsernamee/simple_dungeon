@@ -38,20 +38,7 @@ Game::Game()
     registry.emplace<Size>(entity2, raylib::Vector2(50, 50));
     registry.emplace<Collision>(entity2, 0b1);
 
-    // Add a player
-    auto player = registry.create();
-    auto& renderable_player = registry.emplace<renderable>(player);
-
-    renderable_player.renderer = new SquareRenderer(raylib::Color(0, 0, 255, 255));
-    renderable_player.z = 0;
-
-    registry.emplace<Position>(player, raylib::Vector2(100, 100));
-    registry.emplace<Velocity>(player, raylib::Vector2(0, 0));
-    registry.emplace<Size>(player, raylib::Vector2(50, 50));
-    registry.emplace<Collision>(player, 0b1);
-    registry.emplace<Player>(player, raylib::Color(0, 0, 255, 255), 0);
-    registry.emplace<CameraFollower>(player, 1, raylib::Vector2(25, 25));
-
+    // createPlayer(registry, raylib::Color(255, 0, 0, 255), -1);
 
 }
 
@@ -141,6 +128,7 @@ void Game::cameraFollowerSystem()
     auto view = registry.view<Position, CameraFollower>();
 
     raylib::Vector2 average = raylib::Vector2(0, 0);
+    int count = 0;
 
     for (auto entity : view) {
 
@@ -148,10 +136,15 @@ void Game::cameraFollowerSystem()
         auto& cameraFollower = view.get<CameraFollower>(entity);
 
         average += position.position + cameraFollower.offset; // TODO: Take into account strength
+        count++;
 
     }
 
-    average /= view.size_hint(); // Get the average position
+    if (count == 0) {
+        return;
+    }
+
+    average /= count;
 
     raylib::Vector2 target = camera.target; // Convert to raylib::Vector2 from Vector2
 
