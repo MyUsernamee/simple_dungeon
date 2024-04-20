@@ -13,22 +13,29 @@ int main () {
     raylib::Window w(GetScreenWidth(), GetScreenHeight(), "Dungeon Generator");
     
     w.SetFullscreen(true);
-    
 
     SetTargetFPS(60);
 
     Game game = Game();
 
     EmptyDungeonGenerator generator = EmptyDungeonGenerator();
-    Dungeon dungeon = generator.generateDungeon(100, 100);
+    Dungeon dungeon = generator.generateDungeon(128, 128);
 
     game.setDungeon(dungeon);
 
     while (!w.ShouldClose()) {
 
         w.BeginDrawing();
-        w.ClearBackground(RAYWHITE);
+        w.ClearBackground(BLACK);
 
+        // For testing lets display all of the TileSet
+        for (int i = 0; i < dungeon.getTileSet().getTileCount(); i++) {
+            DrawTexture(dungeon.getTileSet().getTile(i).texture, i * 16, 0, WHITE);
+
+            // Display the index
+            DrawText(std::to_string(i).c_str(), i * 16, 16, 10, WHITE);
+
+        }
 
         game.run();
 

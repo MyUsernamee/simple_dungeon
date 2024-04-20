@@ -15,6 +15,7 @@ include_directories(dependencies/raygui/src)
 include_directories(dependencies/raylib-cpp/include)
 include_directories(dependencies/voronoi/src)
 include_directories(dependencies/entt/src) # Header only library ECS :)
+include_directories(dependencies/wfc-cpp/src) # Header only library WFC :)
 
 # Set it so Wfatal-errors is on by default
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wfatal-errors")

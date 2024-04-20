@@ -87,7 +87,7 @@ void Game::render()
 
     camera.BeginMode();
 
-    currentDungeon.render();
+    currentDungeon.render(camera);
 
     // Sort the registry by z-index
     registry.sort<renderable>([](const renderable& a, const renderable& b) {

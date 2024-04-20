@@ -27,14 +27,21 @@ Dungeon::~Dungeon()
 
 }
 
-void Dungeon::render()
+void Dungeon::render(raylib::Camera2D camera)
 {
 
-    for (int y = 0; y < height; y++) {
+    int start_x = ((int)camera.target.x - (int)camera.offset.x) / TILE_SIZE;
+    int start_y = ((int)camera.target.y - (int)camera.offset.y) / TILE_SIZE;
 
-        for (int x = 0; x < width; x++) {
+    int end_x = start_x + GetRenderWidth() / TILE_SIZE + 1;
+    int end_y = start_y + GetRenderHeight() / TILE_SIZE + 2;
+    
+    for (int y = start_y; y < end_y; y++) {
+
+        for (int x = start_x; x < end_x; x++) {
 
             if (tiles[y * width + x] == -1) continue;
+            if (x < 0 || x >= width || y < 0 || y >= height) continue; // TODO: Make this use a clamp function instead of if statements
 
             Tile tile = tileSet.getTile(tiles[y * width + x]);
 

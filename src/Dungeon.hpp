@@ -19,7 +19,7 @@ class Dungeon {
         /**
          * @brief Render the dungeon.
         */
-        void render();
+        void render(raylib::Camera2D camera); // Camera used for Optimization so we don't render tiles that are not visible.
 
         // TOOD: Add getters and setters for everything.
         TileSet getTileSet() {
