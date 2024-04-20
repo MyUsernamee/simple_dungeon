@@ -22,6 +22,9 @@ class Game {
             return registry;
         }
         
+        void setDungeon(Dungeon dungeon) {
+            currentDungeon = dungeon;
+        }
 
     private:
 

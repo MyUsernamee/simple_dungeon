@@ -14,7 +14,7 @@ Game::Game()
 
     // Initialize the camera
     camera = raylib::Camera2D(raylib::Vector2(GetRenderWidth() / 2, GetRenderHeight() / 2), raylib::Vector2(GetRenderWidth() / 2, GetRenderHeight() / 2), 0.0f, 1.0f);
-
+    currentDungeon = Dungeon(0, 0, nullptr, TileSet()); // Empty dungeon
     registry = entt::registry();
 
     // For testing lets add a renderable entity
@@ -86,6 +86,8 @@ void Game::render()
 {
 
     camera.BeginMode();
+
+    currentDungeon.render();
 
     // Sort the registry by z-index
     registry.sort<renderable>([](const renderable& a, const renderable& b) {
@@ -243,6 +245,14 @@ void Game::collisionSystem()
                     resolution.x = 0;
                 }
 
+                // Flip the resolution based on the direction of the collision
+                if (rect.x < otherRect.x) {
+                    resolution.x = -resolution.x;
+                }
+                if (rect.y < otherRect.y) {
+                    resolution.y = -resolution.y;
+                }
+
                 // Check if either has a velocity
                 Velocity* velocity = registry.try_get<Velocity>(entity);
                 Velocity* otherVelocity = registry.try_get<Velocity>(otherEntity);
@@ -289,6 +299,74 @@ void Game::collisionSystem()
 
                     otherPosition.position.x -= resolution.x;
                     otherPosition.position.y -= resolution.y;
+                }
+
+            }
+
+        }
+
+        // We now do collisions with the dungeon
+        raylib::Rectangle rect = size.size;
+        rect.x = position.position.x;
+        rect.y = position.position.y;
+
+        // We get all tiles within the rectangle
+        int x1 = rect.x / TILE_SIZE;
+        int y1 = rect.y / TILE_SIZE;
+
+        int x2 = (rect.x + rect.width) / TILE_SIZE + 1;
+        int y2 = (rect.y + rect.height) / TILE_SIZE + 1;
+
+        for (int y = y1; y <= y2; y++) {
+
+            for (int x = x1; x <= x2; x++) {
+
+                if (x < 0 || y < 0 || x >= currentDungeon.width || y >= currentDungeon.height) {
+                    continue;
+                }
+
+                if (currentDungeon.getTile(x, y).solid) {
+
+                    raylib::Rectangle tileRect = raylib::Rectangle{x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE};
+                    
+
+                    if (rect.CheckCollision(tileRect)) {
+
+                        raylib::Rectangle resolution_rect = rect.GetCollision(tileRect);
+
+                        raylib::Vector2 resolution = raylib::Vector2(resolution_rect.width, resolution_rect.height);
+
+                        bool axis = abs(resolution.x) < abs(resolution.y);
+                        // Set the minimum resolution
+                        if (axis) {
+                            resolution.y = 0;
+                        } else {
+                            resolution.x = 0;
+                        }
+
+                        // We invert based on if the rect is to the left of the tile
+                        if (rect.x < tileRect.x) {
+                            resolution.x = -resolution.x;
+                        }
+                        if (rect.y < tileRect.y) {
+                            resolution.y = -resolution.y;
+                        }
+
+                        Velocity* velocity = registry.try_get<Velocity>(entity);
+
+                        if (velocity != nullptr) {
+                            if (axis) {
+                                velocity->velocity.y = 0;
+                            } else {
+                                velocity->velocity.x = 0;
+                            }
+
+                            position.position.x += resolution.x;
+                            position.position.y += resolution.y;
+                        }
+
+                    }
+
                 }
 
             }

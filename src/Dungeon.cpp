@@ -38,7 +38,7 @@ void Dungeon::render()
 
             Tile tile = tileSet.getTile(tiles[y * width + x]);
 
-            DrawTexture(tile.texture, x * tile.texture.width, y * tile.texture.height, WHITE);
+            DrawTextureEx(tile.texture, {(float)x * TILE_SIZE, (float)y * TILE_SIZE}, 0, TILE_SIZE / tile.texture.width, WHITE);
 
         }
 

@@ -1,5 +1,6 @@
 #include <raylib-cpp.hpp>
 #include "Game.hpp"
+#include "EmptyDungeonGenerator.hpp"
 #define RAYGUI_IMPLEMENTATION
 #include "raygui.h"
 
@@ -17,6 +18,11 @@ int main () {
     SetTargetFPS(60);
 
     Game game = Game();
+
+    EmptyDungeonGenerator generator = EmptyDungeonGenerator();
+    Dungeon dungeon = generator.generateDungeon(100, 100);
+
+    game.setDungeon(dungeon);
 
     while (!w.ShouldClose()) {
 
