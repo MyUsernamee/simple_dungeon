@@ -45,6 +45,96 @@ void TileSet::load(char * path, int size)
 
 }
 
+void TileSet::loadbin(char *path, int size)
+{
+
+    // Load the file
+    FILE *file = fopen(path, "rb");
+
+    if (file == NULL) {
+
+        TraceLog(LOG_ERROR, "Failed to open file %s", path);
+        return;
+
+    }
+
+    // Read the number of tiles
+    int tileCount;
+    fread(&tileCount, sizeof(int), 1, file);
+
+    // Read the tiles
+    for (int i = 0; i < tileCount; i++) {
+
+        // Read the texture
+        int textureSize;
+        fread(&textureSize, sizeof(int), 1, file);
+
+        char *textureData = new char[textureSize];
+        fread(textureData, sizeof(char), textureSize, file);
+
+        Image image = LoadImageFromMemory(".png", (unsigned char *)textureData, textureSize);
+        Texture2D texture = LoadTextureFromImage(image);
+
+        // Read the solid flag
+        bool solid;
+        fread(&solid, sizeof(bool), 1, file);
+
+        // Add the tile
+        addTile(texture, solid);
+
+        // Clean up
+        delete[] textureData;
+
+    }
+
+}
+
+void TileSet::savebin(char *path, int size)
+{
+
+    // Open the file
+    FILE *file = fopen(path, "wb");
+
+    if (file == NULL) {
+
+        TraceLog(LOG_ERROR, "Failed to open file %s", path);
+        return;
+
+    }
+
+    // Write the number of tiles
+    int tileCount = tiles.size();
+    fwrite(&tileCount, sizeof(int), 1, file);
+
+    // Write the tiles
+    for (int i = 0; i < tileCount; i++) {
+
+        // Write the texture
+        // Convert Texture to TextureUnmanaged
+        raylib::TextureUnmanaged texture = tiles[i].texture;
+        raylib::Image image = texture.GetData();
+        int textureSize;
+        unsigned char *textureData = ExportImageToMemory(image, ".png", &textureSize);
+
+        
+
+        fwrite(&textureSize, sizeof(int), 1, file);
+        fwrite(textureData, sizeof(char), textureSize, file);
+
+        // Write the solid flag
+        fwrite(&tiles[i].solid, sizeof(bool), 1, file);
+
+        // Clean up
+        
+        delete[] textureData;
+
+    }
+
+    // Close the file
+    fclose(file);
+
+}
+
 TileSet::~TileSet()
 {
 

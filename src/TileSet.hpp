@@ -37,6 +37,10 @@ class TileSet {
          * @note This function is called by the constructor, it adds the tiles to the tile set.
         */
         void load(char* path, int size);
+        // Load a tileset from a file.
+        void loadbin(char* path, int size);
+        // Save a tileset to a file.
+        void savebin(char* path, int size);
 
         /**
          * @brief Add a tile to the tile set.

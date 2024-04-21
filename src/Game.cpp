@@ -32,7 +32,6 @@ Game::Game()
     registry.emplace<MeleeEnemy>(entity, 60, 0, 80.0, 10);
     registry.emplace<Team>(entity, 0b10);
     registry.emplace<Collision>(entity, 1);
-
     // We add another one
     auto entity2 = registry.create();
     auto& renderable_2 = registry.emplace<renderable>(entity2);

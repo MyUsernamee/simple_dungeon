@@ -31,6 +31,8 @@ struct Size {
 struct Collision {
 
     int bitMask; // Bitmask for collision
+    entt::sigh<void(entt::registry &, entt::entity, entt::entity)> onCollisionSignal;
+
 
 };
 
@@ -74,5 +76,14 @@ struct MeleeEnemy {
     int attackTimer;
     double range;
     int damage;
+
+};
+
+struct Projectile {
+
+    int damage;
+    int lifeTime;
+    double speed;
+    raylib::Vector2 direction;
 
 };

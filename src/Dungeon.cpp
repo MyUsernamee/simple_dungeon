@@ -39,9 +39,8 @@ void Dungeon::render(raylib::Camera2D camera)
     for (int y = start_y; y < end_y; y++) {
 
         for (int x = start_x; x < end_x; x++) {
-
-            if (tiles[y * width + x] == -1) continue;
             if (x < 0 || x >= width || y < 0 || y >= height) continue; // TODO: Make this use a clamp function instead of if statements
+            if (tiles[y * width + x] == -1) continue;
 
             Tile tile = tileSet.getTile(tiles[y * width + x]);
 

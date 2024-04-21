@@ -13,13 +13,19 @@ file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS src/*.cpp)
 include_directories(src) # No include directory today lmao.
 include_directories(dependencies/raygui/src)
 include_directories(dependencies/raylib-cpp/include)
-include_directories(dependencies/voronoi/src)
 include_directories(dependencies/entt/src) # Header only library ECS :)
 include_directories(dependencies/wfc-cpp/src) # Header only library WFC :)
+include_directories(dependencies/delaunator-cpp/include) # Header only library Delaunator :)
 
 # Set it so Wfatal-errors is on by default
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wfatal-errors")
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
+# Remove the main.cpp
+list(REMOVE_ITEM SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp)
+# Add a tileset tool 
+add_executable(tileset_tool ${SOURCES} tools/tileset_tool.cpp)
+
 target_link_libraries(${PROJECT_NAME} raylib)
+target_link_libraries(tileset_tool raylib)

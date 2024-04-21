@@ -15,7 +15,7 @@ struct Player {
 };
 
 void playerSystem(entt::registry& registry);
-entt::entity createPlayer(entt::registry& registry, raylib::Color color, int gamepad);
+entt::entity createPlayer(entt::registry& registry, raylib::Color color, int gamepad, raylib::Vector2 position = raylib::Vector2(512, 512));
 raylib::Vector2 getMovementVector(int gamepad);
 
 class PlayerRenderer : public Renderer {

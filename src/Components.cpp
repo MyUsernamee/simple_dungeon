@@ -3,7 +3,7 @@
 Health::Health(int health, int maxHealth) : health{health}, maxHealth{maxHealth}
 {
     
-    
+
 
 }
 
@@ -19,3 +19,4 @@ void Health::takeDamage(int damage)
     }
 
 }
+

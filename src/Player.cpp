@@ -19,7 +19,7 @@ void playerSystem(entt::registry &registry)
         auto &velocity = view.get<Velocity>(entity);
 
         raylib::Vector2 movement = getMovementVector(player.gamepad);
-        velocity.velocity = movement * 100.0; // TODO: Make this a constant / variable
+        velocity.velocity = movement * 1000.0; // TODO: Make this a constant / variable
 
         player_exists[player.gamepad + 1] = true;
         
@@ -32,7 +32,7 @@ void playerSystem(entt::registry &registry)
 
         if (!player_exists[i + 1] && ((i == -1 && IsKeyDown(KEY_SPACE)) || (i != -1 && IsGamepadButtonPressed(i, GAMEPAD_BUTTON_RIGHT_FACE_DOWN))))
         {
-            createPlayer(registry, raylib::Color(GetRandomValue(0, 255), GetRandomValue(0, 255), GetRandomValue(0, 255), 255), i);
+            createPlayer(registry, raylib::Color(GetRandomValue(0, 255), GetRandomValue(0, 255), GetRandomValue(0, 255), 255), i, raylib::Vector2(0, 0));
             // WaitTime(0.2);
         }        
 
@@ -42,7 +42,7 @@ void playerSystem(entt::registry &registry)
 }
 
 
-entt::entity createPlayer(entt::registry &registry, raylib::Color color, int gamepad)
+entt::entity createPlayer(entt::registry &registry, raylib::Color color, int gamepad, raylib::Vector2 position)
 {
     auto player = registry.create();
     auto& renderable_player = registry.emplace<renderable>(player);
@@ -50,7 +50,8 @@ entt::entity createPlayer(entt::registry &registry, raylib::Color color, int gam
     renderable_player.renderer = new PlayerRenderer(color);
     renderable_player.z = 0;
 
-    registry.emplace<Position>(player, raylib::Vector2(200, 100));
+    registry.emplace<Position>(player, position);
+    TraceLog(LOG_INFO, "Player created at %f, %f", position.x, position.y);
     registry.emplace<Velocity>(player, raylib::Vector2(0, 0));
     registry.emplace<Size>(player, raylib::Vector2(32, 32));
     registry.emplace<Collision>(player, 0b1);
