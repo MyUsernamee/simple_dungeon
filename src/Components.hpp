@@ -4,6 +4,12 @@
 #include <entt/entt.hpp>
 #include "renderers/Renderer.hpp"
 
+/*
+
+    This file contains all of the components that can be added to an entity.
+
+*/
+
 struct Renderable {
 
     Renderer* renderer;
