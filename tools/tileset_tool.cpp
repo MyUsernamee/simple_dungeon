@@ -31,6 +31,8 @@ int main(int argc, char* argv[]) {
 
     int selectedTile = 0;
 
+    int* tiles = new int[ROOM_WIDTH * ROOM_HEIGHT];
+
     while (!w.ShouldClose()) {
         
         BeginDrawing();
@@ -45,6 +47,13 @@ int main(int argc, char* argv[]) {
             for (int y = 0; y < ROOM_HEIGHT; y++) {
                 Rectangle rect = { x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE };
                 DrawRectangleLinesEx(rect, 1, DARKGRAY);
+
+                // Draw the tiles
+                int currentTileIndex = tiles[x + y* ROOM_WIDTH];
+                Tile tile = tileSet.getTile(currentTileIndex);
+                
+                DrawTexture(
+                
             }
         }
 
@@ -73,6 +82,7 @@ int main(int argc, char* argv[]) {
         DrawText(TextFormat("Selected Tile: %i", selectedTile), 10, 30, 20, BLACK);
         DrawText(TextFormat("Solid: %s", tileSet.getTile(selectedTile).solid ? "true" : "false"), 10, 50, 20, BLACK);
 
+        
 
         EndDrawing();
     }
