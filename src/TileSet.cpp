@@ -1,5 +1,6 @@
 #include "TileSet.hpp"
 #include <vector>
+#include "Dungeon.hpp"
 
 TileSet::TileSet()
 {
@@ -156,5 +157,9 @@ void TileSet::addTile(Texture2D texture, bool solid)
 Tile& TileSet::getTile(int index)
 {
     
+    if (index < 0 || index >= tiles.size()) {
+        return EMPTY_TILE;
+    }
+
     return tiles[index];
 }

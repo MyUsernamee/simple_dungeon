@@ -5,20 +5,13 @@
 #include <delaunator.hpp>
 #include <set>
 
-const int HALLWAY_WIDTH = 4;
+const int HALLWAY_WIDTH = 2;
 
 EmptyDungeonGenerator::EmptyDungeonGenerator() {
 
-    tileSet = TileSet("assets/0x72_DungeonTilesetII_v1.7/atlas_floor-16x16.png", 16);
-
-    int floorCount = tileSet.getTileCount();
-
-    tileSet.load("assets/0x72_DungeonTilesetII_v1.7/atlas_walls_high-16x32.png", 16);
-
-    // Make every tile after the floor tiles solid
-    for (int i = floorCount; i < tileSet.getTileCount(); i++) {
-        tileSet.getTile(i).solid = true;
-    }
+    tileSet = TileSet();
+    tileSet.loadbin("assets/tileset.tileset", 16);
+    room_templates.push_back(Room("assets/room.room"));
 
 }
 
@@ -100,12 +93,12 @@ Dungeon EmptyDungeonGenerator::generateDungeon(int width, int height) {
     int* tiles = new int[width * height];
     // WE initialize everything with -1
     for (int i = 0; i < width * height; i++) {
-        tiles[i] = 0;
+        tiles[i] = -1;
     }
 
     // We create rooms
     std::vector<raylib::Vector2> rooms;
-    for (int i = 0; i < 32; i++) { // TODO: Make this generic, remove magic numbers
+    for (int i = 0; i < 128; i++) { // TODO: Make this generic, remove magic numbers
         rooms.push_back(raylib::Vector2(GetRandomValue(0, width), GetRandomValue(0, height)));
     }
 
@@ -160,7 +153,7 @@ Dungeon EmptyDungeonGenerator::generateDungeon(int width, int height) {
     mst = findMST(edges);
 
     // Choose a couple random edges and add them to the MST so we have some loops
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 16; i++) {
         mst.push_back(edges[GetRandomValue(0, edges.size() - 1)]);
     }
 
@@ -192,6 +185,13 @@ Dungeon EmptyDungeonGenerator::generateDungeon(int width, int height) {
         }
     }
 
+    // We then create a room for each point
+    for (const auto& p : rooms) {
+        // Choose a random room template
+        Room room = room_templates[GetRandomValue(0, room_templates.size() - 1)];
+        room.place(p.x - room.getWidth() / 2, p.y - room.getHeight() / 2, tiles, width, height);
+    }
+
     // Upscale the map
     for (int y = 0; y < height; y += HALLWAY_WIDTH) {
         for (int x = 0; x < width; x += HALLWAY_WIDTH) {
@@ -201,31 +201,24 @@ Dungeon EmptyDungeonGenerator::generateDungeon(int width, int height) {
                     if (y + i >= height || x + j >= width)
                         continue;
 
-                    tiles[(y + i) * width + (x + j)] = downscale[(y / HALLWAY_WIDTH) * width / HALLWAY_WIDTH + x / HALLWAY_WIDTH];
+                    tiles[(y + i) * width + (x + j)] = downscale[(y / HALLWAY_WIDTH) * width / HALLWAY_WIDTH + x / HALLWAY_WIDTH] ? 0 : tiles[(y + i) * width + (x + j)];
                 }
             }
         }
     }
 
-    // We then create a room for each point
-    for (const auto& p : rooms) {
-        int roomWidth = GetRandomValue(8, 32);
-        int roomHeight = GetRandomValue(8, 32);
+    // WE then scan the map and if we find a non-solid tile we add two tiles above it for a wall
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
 
-        for (int y = p.y - roomHeight / 2; y < p.y + roomHeight / 2; y++) {
-            for (int x = p.x - roomWidth / 2; x < p.x + roomWidth / 2; x++) {
-
-                if (y < 0 || x < 0 || y >= height || x >= width)
-                    continue;
-
-                tiles[y * width + x] = 1;
+            if (!tileSet.getTile(tiles[y * width + x]).solid &&
+                y > 0 && y < height - 1 &&
+                tiles[(y - 1) * width + x] == -1 &&
+                tiles[(y - 2) * width + x] == -1) {
+                tiles[(y - 1) * width + x] = 171;
+                tiles[(y - 2) * width + x] = 99;
             }
         }
-    }
-
-    // Subtract 1 from every tile
-    for (int i = 0; i < width * height; i++) {
-        tiles[i] = tiles[i] - 1;
     }
 
     return Dungeon(width, height, tiles, tileSet);

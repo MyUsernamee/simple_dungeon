@@ -65,6 +65,10 @@ class TileSet {
     private:
 
         std::vector<Tile> tiles;
+        Tile EMPTY_TILE {
+            .texture = {},
+            .solid = true
+        };
 
 
 };

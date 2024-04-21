@@ -19,7 +19,7 @@ void playerSystem(entt::registry &registry)
         auto &velocity = view.get<Velocity>(entity);
 
         raylib::Vector2 movement = getMovementVector(player.gamepad);
-        velocity.velocity = movement * 1000.0; // TODO: Make this a constant / variable
+        velocity.velocity = movement * 100.0; // TODO: Make this a constant / variable
 
         player_exists[player.gamepad + 1] = true;
         
@@ -59,6 +59,19 @@ entt::entity createPlayer(entt::registry &registry, raylib::Color color, int gam
     registry.emplace<CameraFollower>(player, 1, raylib::Vector2(25, 25));
     registry.emplace<Health>(player, 100, 100);
     registry.emplace<Team>(player, 0b01);
+
+    int count = 0;
+    raylib::Vector2 available_position = raylib::Vector2(0, 0);
+    for (auto entity : registry.view<Player, Position>())
+    {
+        count++;
+        available_position = registry.get<Position>(entity).position;
+    }
+
+    if (count > 1)
+    {
+        registry.get<Position>(player).position = available_position;
+    }
 
     return player;
 }

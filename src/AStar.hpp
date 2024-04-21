@@ -1,5 +1,6 @@
 #include <vector>
 #include <raylib-cpp.hpp>
+#include <functional>
 
 #pragma once
 namespace std {
@@ -11,4 +12,7 @@ namespace std {
         }
     };
 }
-std::vector<raylib::Vector2> findPath(raylib::Vector2 start, raylib::Vector2 end, int* map, int mapWidth, int mapHeight);
+
+double def_heuristic(raylib::Vector2 a, raylib::Vector2 b, int tile = 0);
+
+std::vector<raylib::Vector2> findPath(raylib::Vector2 start, raylib::Vector2 end, int* map, int mapWidth, int mapHeight, std::function<double(raylib::Vector2, raylib::Vector2, int)> heuristic = &def_heuristic);

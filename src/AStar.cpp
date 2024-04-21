@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <limits>
 #include <algorithm>
+#include <functional>
 
 // Define directions for 4 possible neighbors (assuming 8-direction movement)
 const std::vector<raylib::Vector2> directions = {
@@ -14,17 +15,25 @@ const std::vector<raylib::Vector2> directions = {
 };
 
 // Assuming a simple Manhattan distance heuristic for grid-based pathfinding
-double heuristic(raylib::Vector2 current, raylib::Vector2 goal) {
-    return std::abs(current.x - goal.x) + std::abs(current.y - goal.y);
+double def_heuristic(raylib::Vector2 current, raylib::Vector2 goal, int tile) {
+    return std::abs(current.x - goal.x) + std::abs(current.y - goal.y) - (tile != 0 ? 0.5 : 0);
 }
 
-std::vector<raylib::Vector2> findPath(raylib::Vector2 start, raylib::Vector2 end, int* map, int mapWidth, int mapHeight) {
+std::vector<raylib::Vector2> findPath(raylib::Vector2 start, raylib::Vector2 end, int* map, int mapWidth, int mapHeight, std::function<double(raylib::Vector2, raylib::Vector2, int)> heuristic) {
+    
+    // We floor the start and end points to get the cell position
+    start.x = floor(start.x);
+    start.y = floor(start.y);
+    end.x = floor(end.x);
+    end.y = floor(end.y);
+    
+    
     std::vector<raylib::Vector2> open_set;
     std::unordered_map<raylib::Vector2, raylib::Vector2> cameFrom;
 
     std::unordered_map<raylib::Vector2, double> gScore;
     open_set.push_back(start);
-    gScore[start] = heuristic(start, end);
+    gScore[start] = heuristic(start, end, map[(int)start.y * mapWidth + (int)start.x]);
 
     // Check if the start and end points are in the map bounds
     if (start.x < 0 || start.x >= mapWidth || start.y < 0 || start.y >= mapHeight) {
@@ -71,11 +80,7 @@ std::vector<raylib::Vector2> findPath(raylib::Vector2 start, raylib::Vector2 end
                 gScore[current] = std::numeric_limits<double>::max(); // Initialize to infinity
             }
 
-            double tentative_gScore = gScore[current] + 1; // Assuming uniform cost for each step
-
-            if (map[(int)neighbor.y * mapWidth + (int)neighbor.x] != 0) {
-                tentative_gScore -= 0.5; // Use halls as a shortcut
-            }
+            double tentative_gScore = heuristic(current, neighbor, map[(int)neighbor.y * mapWidth + (int)neighbor.x]) + gScore[current];
 
             if (gScore.find(neighbor) == gScore.end()) {
                 gScore[neighbor] = std::numeric_limits<double>::max(); // Initialize to infinity

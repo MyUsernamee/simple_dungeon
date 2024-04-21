@@ -2,16 +2,18 @@
 #include "Components.hpp"
 
 #include <raylib-cpp.hpp>
+#include "AStar.hpp"
 
-void meleeSystem(entt::registry & registry)
+void meleeSystem(entt::registry & registry, Dungeon &dungeon)
 {
 
-    auto view = registry.view<AI, MeleeEnemy, Team, Position>();
+    auto view = registry.view<AI, MeleeEnemy, Team, Position, Size>();
 
     for (auto entity : view)
     {
         auto &ai = view.get<AI>(entity);
         auto &melee = view.get<MeleeEnemy>(entity);
+        auto &size = view.get<Size>(entity);
         auto &position = view.get<Position>(entity);
         auto &team = view.get<Team>(entity);
 
@@ -43,12 +45,35 @@ void meleeSystem(entt::registry & registry)
 
         if (closestEnemy != entt::null)
         {
+
             auto &enemyPosition = enemyView.get<Position>(closestEnemy);
 
-            raylib::Vector2 direction = enemyPosition.position - position.position;
-            direction = direction.Normalize(); // TODO: Add a visibility check.
+            raylib::Vector2 center = position.position + size.size / 2.0;
 
-            ai.movement = direction;
+            if (dungeon.rayCast(center, enemyPosition.position, nullptr))
+            {
+                continue; // We can't see the enemy.
+            }
+
+            // We look for a path to the enemy.
+            auto path = dungeon.pathFind(center, enemyPosition.position);
+
+            if (path.size() > 0)
+            {
+
+                raylib::Vector2 positionToMoveTo = path[1] + raylib::Vector2{0.5, 0.5} * TILE_SIZE;
+
+                raylib::Vector2 direction = positionToMoveTo - center;
+                direction = direction.Normalize();
+                ai.movement = direction;
+
+            }
+            else
+            {
+                ai.movement = raylib::Vector2{0, 0};
+            }
+
+            
         }
         else
         {

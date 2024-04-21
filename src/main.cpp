@@ -7,7 +7,7 @@
 #include "Components.hpp"
 
 
-#define DEBUG // Comment this line to remove debug information.
+// #define DEBUG // Comment this line to remove debug information.
 #define DEBUG_PADDING 10
 
 void aStarDemo() {

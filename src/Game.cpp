@@ -17,33 +17,6 @@ Game::Game()
     currentDungeon = Dungeon(0, 0, nullptr, TileSet()); // Empty dungeon
     registry = entt::registry();
 
-    // For testing lets add a renderable entity
-    auto entity = registry.create();
-    auto& renderable_ = registry.emplace<renderable>(entity);
-
-    renderable_.renderer = new SquareRenderer(raylib::Color(255, 0, 0, 255));
-    renderable_.z = 0;
-
-    registry.emplace<Position>(entity, raylib::Vector2(200, 100));
-    registry.emplace<Velocity>(entity, raylib::Vector2(-100, 0));
-    registry.emplace<Size>(entity, raylib::Vector2(50, 50));
-    registry.emplace<Health>(entity, 100, 100);
-    registry.emplace<AI>(entity, 50.0, raylib::Vector2(0, 0));
-    registry.emplace<MeleeEnemy>(entity, 60, 0, 80.0, 10);
-    registry.emplace<Team>(entity, 0b10);
-    registry.emplace<Collision>(entity, 1);
-    // We add another one
-    auto entity2 = registry.create();
-    auto& renderable_2 = registry.emplace<renderable>(entity2);
-
-    renderable_2.renderer = new SquareRenderer(raylib::Color(0, 255, 0, 255));
-    renderable_2.z = 0;
-
-    registry.emplace<Position>(entity2, raylib::Vector2(100, 100));
-    registry.emplace<Velocity>(entity2, raylib::Vector2(100, 0));
-    registry.emplace<Size>(entity2, raylib::Vector2(50, 50));
-    registry.emplace<Collision>(entity2, 0b1);
-
     // For stress testing lets add a bunch of entities
     // for (int i = 0; i < 200; i++) {
 
@@ -86,7 +59,39 @@ void Game::render()
 
     camera.BeginMode();
 
-    currentDungeon.render(camera);
+    std::vector<raylib::Vector2> visibility_points;
+
+    // We get all players
+    auto _view = registry.view<Player, Position>();
+
+    for (auto entity : _view) {
+
+        auto& position = _view.get<Position>(entity);
+        visibility_points.push_back(position.position);
+
+    }
+
+    currentDungeon.render(camera, visibility_points);
+
+    raylib::Vector2 start = camera.target;
+    raylib::Vector2 end = camera.GetScreenToWorld(GetMousePosition());
+
+    if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
+
+        // Find a path from the player to the mouse
+        std::vector<raylib::Vector2> path = currentDungeon.pathFind(start, end);
+
+        if (path.size() > 0) {
+
+            for (int i = 0; i < path.size() - 1; i++) {
+
+                DrawLine(path[i].x, path[i].y, path[i + 1].x, path[i + 1].y, raylib::Color(255, 0, 0, 255));
+
+            }
+
+        }
+
+    }
 
     // Sort the registry by z-index
     registry.sort<renderable>([](const renderable& a, const renderable& b) {
@@ -137,8 +142,29 @@ void Game::update(double dt)
     playerSystem(registry);
     cameraFollowerSystem();
     aiSystem(registry);
-    meleeSystem(registry);
+    meleeSystem(registry, currentDungeon);
     healthSystem(registry);
+
+    // If the user presses r we spawn an enemy at the mouse position
+    if (IsKeyPressed(KEY_R)) {
+
+        auto entity = registry.create();
+        
+        auto& renderable_ = registry.emplace<renderable>(entity);
+
+        renderable_.renderer = new SquareRenderer(raylib::Color(0, 255, 0, 255));
+        renderable_.z = 0;
+
+        registry.emplace<Position>(entity, camera.GetScreenToWorld(GetMousePosition()));
+        registry.emplace<Velocity>(entity, raylib::Vector2(GetRandomValue(-100, 100), GetRandomValue(-100, 100)));
+        registry.emplace<Size>(entity, raylib::Vector2(50, 50));
+        registry.emplace<Collision>(entity, 0b1);
+        registry.emplace<Health>(entity, 100, 100);
+        registry.emplace<AI>(entity, 50.0, raylib::Vector2(0, 0));
+        registry.emplace<MeleeEnemy>(entity, 60, 0, 80.0, 10);
+        registry.emplace<Team>(entity, 0b10);
+
+    }
     
 
 }
@@ -230,48 +256,24 @@ void Game::collisionSystem()
             otherRect.x = otherPosition.position.x;
             otherRect.y = otherPosition.position.y;
 
-            if (rect.CheckCollision(otherRect) && collision.bitMask & otherCollision.bitMask) {
+            auto center = position.position + size.size / 2;
+            auto otherCenter = otherPosition.position + otherSize.size / 2;
 
-                // Get resolution
-                raylib::Rectangle resolution_rect = rect.GetCollision(otherRect);
+            if (center.Distance(otherCenter) < (size.size.x + otherSize.size.x) / 2.0 && collision.bitMask & otherCollision.bitMask) {
 
-                raylib::Vector2 resolution = raylib::Vector2(resolution_rect.width, resolution_rect.height);\
-                bool axis = abs(resolution.x) < abs(resolution.y);
-                // Set the minimum resolution
-                if (axis) {
-                    resolution.y = 0;
-                } else {
-                    resolution.x = 0;
-                }
 
-                // Flip the resolution based on the direction of the collision
-                if (rect.x < otherRect.x) {
-                    resolution.x = -resolution.x;
-                }
-                if (rect.y < otherRect.y) {
-                    resolution.y = -resolution.y;
-                }
+                raylib::Vector2 resolution = center - otherCenter;
+
+                resolution = resolution.Normalize();
+                resolution = resolution * ((size.size.x + otherSize.size.x) / 2.0 - center.Distance(otherCenter));
 
                 // Check if either has a velocity
                 Velocity* velocity = registry.try_get<Velocity>(entity);
                 Velocity* otherVelocity = registry.try_get<Velocity>(otherEntity);
 
                 if (velocity != nullptr && otherVelocity != nullptr) {
-                        
-                    // Apply resolution
-                    if (!axis) { // TODO: Flip this
-
-                        float average = (velocity->velocity.y + otherVelocity->velocity.y) / 2;
-
-                        velocity->velocity.y = average;
-                        otherVelocity->velocity.y = average;
-                    } else {
-
-                        float average = (velocity->velocity.x + otherVelocity->velocity.x) / 2;
-
-                        velocity->velocity.x = average;
-                        otherVelocity->velocity.x = average;
-                    }
+                      
+                    float average = (velocity->velocity.y + otherVelocity->velocity.y) / 2;
 
                     position.position.x += resolution.x / 2;
                     position.position.y += resolution.y / 2;
@@ -280,20 +282,24 @@ void Game::collisionSystem()
                     otherPosition.position.y -= resolution.y / 2;
                 }
                 else if (velocity != nullptr) {
-                    if (axis) {
-                        velocity->velocity.y = 0;
-                    } else {
-                        velocity->velocity.x = 0;
+                    
+                    // We set the velocity to 0 in the direction of the resolution
+                    float dot = velocity->velocity.DotProduct(resolution);
+
+                    if (dot > 0) {
+                        velocity->velocity = velocity->velocity - resolution * dot / resolution.LengthSqr();
                     }
 
                     position.position.x += resolution.x;
                     position.position.y += resolution.y;
                 }
                 else if (otherVelocity != nullptr) {
-                    if (axis) {
-                        otherVelocity->velocity.y = 0;
-                    } else {
-                        otherVelocity->velocity.x = 0;
+                    
+                    // We set the velocity to 0 in the direction of the resolution
+                    float dot = otherVelocity->velocity.DotProduct(resolution);
+
+                    if (dot > 0) {
+                        otherVelocity->velocity = otherVelocity->velocity - resolution * dot / resolution.LengthSqr();
                     }
 
                     otherPosition.position.x -= resolution.x;
@@ -326,38 +332,32 @@ void Game::collisionSystem()
 
                 if (currentDungeon.getTile(x, y).solid) {
 
-                    raylib::Rectangle tileRect = raylib::Rectangle{x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE};
-                    
+                    raylib::Rectangle tileRect = raylib::Rectangle(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
 
-                    if (rect.CheckCollision(tileRect)) {
+                    // Get the closest point on the rectangle to the center of the entity
+                    raylib::Vector2 center = position.position + size.size / 2;
+                    raylib::Vector2 closest = center;
+                    closest.x = std::clamp(closest.x, tileRect.x, tileRect.x + tileRect.width);
+                    closest.y = std::clamp(closest.y, tileRect.y, tileRect.y + tileRect.height);
 
-                        raylib::Rectangle resolution_rect = rect.GetCollision(tileRect);
+                    if (closest.Distance(center) < size.size.x / 2) {
 
-                        raylib::Vector2 resolution = raylib::Vector2(resolution_rect.width, resolution_rect.height);
+                        // We have a collision
+                        raylib::Vector2 resolution = center - closest;
 
-                        bool axis = abs(resolution.x) < abs(resolution.y);
-                        // Set the minimum resolution
-                        if (axis) {
-                            resolution.y = 0;
-                        } else {
-                            resolution.x = 0;
-                        }
+                        resolution = resolution.Normalize();
+                        resolution = resolution * (size.size.x / 2 - closest.Distance(center));
 
-                        // We invert based on if the rect is to the left of the tile
-                        if (rect.x < tileRect.x) {
-                            resolution.x = -resolution.x;
-                        }
-                        if (rect.y < tileRect.y) {
-                            resolution.y = -resolution.y;
-                        }
-
+                        // Check if either has a velocity
                         Velocity* velocity = registry.try_get<Velocity>(entity);
 
                         if (velocity != nullptr) {
-                            if (axis) {
-                                velocity->velocity.y = 0;
-                            } else {
-                                velocity->velocity.x = 0;
+                            
+                            // We set the velocity to 0 in the direction of the resolution
+                            float dot = velocity->velocity.DotProduct(resolution);
+
+                            if (dot > 0) {
+                                velocity->velocity = velocity->velocity - resolution * dot / resolution.LengthSqr();
                             }
 
                             position.position.x += resolution.x;
@@ -365,6 +365,8 @@ void Game::collisionSystem()
                         }
 
                     }
+
+
 
                 }
 

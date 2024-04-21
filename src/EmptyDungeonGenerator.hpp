@@ -1,5 +1,6 @@
 
 #include "DungeonGenerator.hpp"
+#include "Room.hpp"
 
 #pragma once
 
@@ -11,5 +12,6 @@ class EmptyDungeonGenerator : public DungeonGenerator {
 
     private:
         TileSet tileSet;
+        std::vector<Room> room_templates;
     
 };

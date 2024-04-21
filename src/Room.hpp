@@ -1,7 +1,10 @@
 #pragma once
 
 #include <raylib-cpp.hpp>
+#include "TileSet.hpp"
 
+const int ROOM_WIDTH = 32;
+const int ROOM_HEIGHT = 32;
 
 /**
  * @brief Basic class for a room.
@@ -12,18 +15,31 @@ class Room {
     public:
 
         Room();
-        Room(raylib::Rectangle bounds);
-        Room(int x, int y, int width, int height);
+        Room(int* tiles, TileSet* tileSet, int width, int height);
+        Room(const char* filename);
         ~Room();
 
-        void fill(int* tiles, int tile, int width, int height); //
+        /**
+         * @brief Load a room from .bin file.
+        */
+        void load(const char* filename);
+        /**
+         * @brief Save a room to .bin file.
+        */
+        void save(const char* filename);
+        /**
+         * @brief Place the room at a specific position. in a bigger map.
+        */
+        void place(int x, int y, int* newTiles, int newWidth, int newHeight);
 
-        raylib::Rectangle getBounds() { return bounds; }
-        raylib::Vector2 getCenter() { return raylib::Vector2(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2); }
-
+        int getWidth() { return width; }
+        int getHeight() { return height; }
 
     private:
 
-        raylib::Rectangle bounds;
+        TileSet* tileSet;
+        int* tiles;
+        int width;
+        int height;
 
 };

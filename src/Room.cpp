@@ -1,51 +1,77 @@
 #include "Room.hpp"
 
-
-
 Room::Room()
 {
 
-    bounds = raylib::Rectangle(0, 0, 0, 0);
+    this->tileSet = new TileSet();
+    this->tiles = new int[ROOM_WIDTH * ROOM_HEIGHT];
+    for (int i = 0; i < ROOM_WIDTH * ROOM_HEIGHT; i++) {
+        this->tiles[i] = -1;
+    }
+    this->width = ROOM_WIDTH;
+    this->height = ROOM_HEIGHT;
 
 }
 
-Room::Room(raylib::Rectangle bounds)
+Room::Room(int* tiles, TileSet* tileSet, int width, int height)
 {
 
-    this->bounds = bounds;
+    this->tiles = tiles;
+    this->tileSet = tileSet;
+    this->width = width;
+    this->height = height;
 
 }
 
-Room::Room(int x, int y, int width, int height)
+Room::Room(const char *filename)
 {
 
-    bounds = raylib::Rectangle(x, y, width, height);
+    this->load(filename);
 
 }
 
 Room::~Room()
 {
 
+    //delete[] this->tiles;
+
 }
 
-void Room::fill(int *tiles, int tile, int width, int height)
+void Room::load(const char* filename)
 {
 
-    TraceLog(LOG_INFO, "Filling room with tile %d", tile);
-    TraceLog(LOG_INFO, "Bounds: x: %f, y: %f, width: %f, height: %f", bounds.x, bounds.y, bounds.width, bounds.height);
+    FILE* file = fopen(filename, "rb");
+    fread(&this->width, sizeof(int), 1, file);
+    fread(&this->height, sizeof(int), 1, file);
+    this->tiles = new int[this->width * this->height];
+    fread(this->tiles, sizeof(int), this->width * this->height, file);
 
-    for (int y = bounds.y / 16; y < bounds.y / 16 + bounds.height / 16; y++) {
+    fclose(file);
 
-        for (int x = bounds.x / 16; x < bounds.x / 16 + bounds.width / 16; x++) {
+}
 
-            if (x < 0 || y < 0 || x >= width || y >= height) continue;
+void Room::save(const char* filename)
+{
 
-            int index = y * width + x;
+    FILE* file = fopen(filename, "wb");
+    fwrite(&this->width, sizeof(int), 1, file);
+    fwrite(&this->height, sizeof(int), 1, file);
+    fwrite(this->tiles, sizeof(int), this->width * this->height, file);
 
-            tiles[index] = tile;
+    fclose(file);
 
+}
+
+void Room::place(int x, int y, int* newTiles, int newWidth, int newHeight)
+{
+
+    for (int i = 0; i < newWidth; i++) {
+        for (int j = 0; j < newHeight; j++) {
+            if (i + x >= 0 && i + x < newWidth && j + y >= 0 && j + y < newHeight &&
+                i >= 0 && i < this->width && j >= 0 && j < this->height && tiles[j * this->width + i] != -1) {
+                newTiles[(j + y) * newWidth + (i + x)] = this->tiles[j * this->width + i];
+            }
         }
-
     }
 
 }
