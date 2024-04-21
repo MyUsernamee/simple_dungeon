@@ -18,8 +18,9 @@ void SquareRenderer::render(const entt::registry& registry, const entt::entity& 
 {
 
     auto& transform = registry.get<Position>(entity);
+    auto& size = registry.get<Size>(entity);
 
-    raylib::Rectangle rect = raylib::Rectangle(transform.position.x, transform.position.y, 50, 50);
+    raylib::Rectangle rect = raylib::Rectangle(transform.position.x, transform.position.y, size.size.x, size.size.y);
 
     rect.Draw(color);
 

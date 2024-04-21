@@ -11,6 +11,14 @@ entt::entity createPlayer(entt::registry &registry, raylib::Color color, int gam
     Renderable_player.renderer = new PlayerRenderer(color);
     Renderable_player.z = 0;
 
+    int count = 0;
+    raylib::Vector2 available_position = raylib::Vector2(0, 0);
+    for (auto entity : registry.view<Player, Position>())
+    {
+        count++;
+        available_position = registry.get<Position>(entity).position;
+    }
+
     registry.emplace<Position>(player, position);
     TraceLog(LOG_INFO, "Player created at %f, %f", position.x, position.y);
     registry.emplace<Velocity>(player, raylib::Vector2(0, 0));
@@ -21,15 +29,9 @@ entt::entity createPlayer(entt::registry &registry, raylib::Color color, int gam
     registry.emplace<Health>(player, 100, 100);
     registry.emplace<Team>(player, 0b01);
 
-    int count = 0;
-    raylib::Vector2 available_position = raylib::Vector2(0, 0);
-    for (auto entity : registry.view<Player, Position>())
-    {
-        count++;
-        available_position = registry.get<Position>(entity).position;
-    }
+    
 
-    if (count > 1)
+    if (count > 2)
     {
         registry.get<Position>(player).position = available_position;
     }

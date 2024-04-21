@@ -11,7 +11,8 @@ EmptyDungeonGenerator::EmptyDungeonGenerator() {
 
     tileSet = TileSet();
     tileSet.loadbin("assets/tileset.tileset", 16);
-    room_templates.push_back(Room("assets/room.room"));
+    room_templates.push_back(Room("assets/rooms/room.room")); // TODO: Load all rooms from a directory
+    room_templates.push_back(Room("assets/rooms/big_room.room"));
 
 }
 
@@ -105,6 +106,10 @@ Dungeon EmptyDungeonGenerator::generateDungeon(int width, int height) {
     // Add a starting room at the center
     rooms.push_back(raylib::Vector2(width / 2, height / 2));
 
+    TraceLog(LOG_INFO, "Number of rooms: %i", rooms.size());
+    TraceLog(LOG_INFO, "Width: %i, Height: %i", width, height);
+    TraceLog(LOG_INFO, "Starting room at (%f, %f)", rooms[rooms.size() - 1].x, rooms[rooms.size() - 1].y);
+
 
     std::vector<double> points;
     for (const auto& p : rooms) {
@@ -188,7 +193,7 @@ Dungeon EmptyDungeonGenerator::generateDungeon(int width, int height) {
     // We then create a room for each point
     for (const auto& p : rooms) {
         // Choose a random room template
-        Room room = room_templates[GetRandomValue(0, room_templates.size() - 1)];
+          Room room = room_templates[GetRandomValue(0, room_templates.size() - 1)];
         room.place(p.x - room.getWidth() / 2, p.y - room.getHeight() / 2, tiles, width, height);
     }
 

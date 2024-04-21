@@ -141,6 +141,7 @@ void Game::update(double dt)
     aiSystem(registry);
     meleeSystem(registry, currentDungeon);
     healthSystem(registry);
+    projectileSystem(registry);
 
     // If the user presses r we spawn an enemy at the mouse position
     if (IsKeyPressed(KEY_R)) {
@@ -268,6 +269,9 @@ void Game::collisionSystem()
                 Velocity* velocity = registry.try_get<Velocity>(entity);
                 Velocity* otherVelocity = registry.try_get<Velocity>(otherEntity);
 
+                collision.collisions.push_back(otherEntity);
+                otherCollision.collisions.push_back(entity);
+
                 if (velocity != nullptr && otherVelocity != nullptr) {
                       
                     float average = (velocity->velocity.y + otherVelocity->velocity.y) / 2;
@@ -347,6 +351,8 @@ void Game::collisionSystem()
 
                         // Check if either has a velocity
                         Velocity* velocity = registry.try_get<Velocity>(entity);
+
+                        collision.collisions.push_back(entt::null);
 
                         if (velocity != nullptr) {
                             

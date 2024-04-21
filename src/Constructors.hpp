@@ -12,3 +12,4 @@
 #include <raylib-cpp.hpp>
 
 entt::entity createPlayer(entt::registry& registry, raylib::Color color, int gamepad, raylib::Vector2 position = raylib::Vector2(512, 512));
+entt::entity createProjectile(entt::registry& registry, raylib::Vector2 position, raylib::Vector2 direction, float speed, float damage);    

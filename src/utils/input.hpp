@@ -2,6 +2,10 @@
 #pragma once
 #include <raylib-cpp.hpp>
 
+enum InputAction { 
+    INTERACT, // TODO: Add more actions
+    ATTACK,
+};
 
 raylib::Vector2 getMovementVector(int gamepad) {
 
@@ -31,5 +35,55 @@ raylib::Vector2 getMovementVector(int gamepad) {
     }
 
     return movement;
+
+}
+
+bool isActionDown(int gamepad, InputAction action) {
+
+    if (gamepad == -1) {
+
+        if (action == INTERACT) return IsKeyDown(KEY_E); // TODO: Create a key map / joystick map
+        if (action == ATTACK) return IsMouseButtonDown(MOUSE_LEFT_BUTTON);
+
+    }
+
+    if (IsGamepadAvailable(gamepad)) {
+
+        if (action == INTERACT) return IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_RIGHT_FACE_DOWN);
+        if (action == ATTACK) return IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_RIGHT_FACE_RIGHT);
+
+    }
+    else {
+
+        TraceLog(LOG_WARNING, "Gamepad %i not available", gamepad);
+
+    }
+
+    return false;
+
+}
+
+bool isActionPressed(int gamepad, InputAction action) {
+
+    if (gamepad == -1) {
+
+        if (action == INTERACT) return IsKeyDown(KEY_E); // TODO: Create a key map / joystick map
+        if (action == ATTACK) return IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
+
+    }
+
+    if (IsGamepadAvailable(gamepad)) {
+
+        if (action == INTERACT) return IsGamepadButtonPressed(gamepad, GAMEPAD_BUTTON_RIGHT_FACE_DOWN);
+        if (action == ATTACK) return IsGamepadButtonPressed(gamepad, GAMEPAD_BUTTON_RIGHT_FACE_RIGHT);
+
+    }
+    else {
+
+        TraceLog(LOG_WARNING, "Gamepad %i not available", gamepad);
+
+    }
+
+    return false;
 
 }

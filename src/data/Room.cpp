@@ -65,10 +65,9 @@ void Room::save(const char* filename)
 void Room::place(int x, int y, int* newTiles, int newWidth, int newHeight)
 {
 
-    for (int i = 0; i < newWidth; i++) {
-        for (int j = 0; j < newHeight; j++) {
-            if (i + x >= 0 && i + x < newWidth && j + y >= 0 && j + y < newHeight &&
-                i >= 0 && i < this->width && j >= 0 && j < this->height && tiles[j * this->width + i] != -1) {
+    for (int i = 0; i < this->width; i++) {
+        for (int j = 0; j < this->height; j++) {
+            if (i + x >= 0 && i + x < newWidth && j + y >= 0 && j + y < newHeight && tiles[j * this->width + i] != -1) {
                 newTiles[(j + y) * newWidth + (i + x)] = this->tiles[j * this->width + i];
             }
         }

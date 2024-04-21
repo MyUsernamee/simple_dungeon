@@ -3,6 +3,8 @@
 #include <raylib-cpp.hpp>
 #include "data/Dungeon.hpp"
 
+#pragma once
+
 class Game {
 
     public:

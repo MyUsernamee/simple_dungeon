@@ -3,6 +3,7 @@
 #include <raylib-cpp.hpp>
 #include <entt/entt.hpp>
 #include "renderers/Renderer.hpp"
+#include "Game.hpp"
 
 /*
 
@@ -51,8 +52,7 @@ struct Size {
 struct Collision {
 
     int bitMask; // Bitmask for collision
-    entt::sigh<void(entt::registry &, entt::entity, entt::entity)> onCollisionSignal;
-
+    std::vector<entt::entity> collisions;
 
 };
 
@@ -69,18 +69,24 @@ struct Health {
 
     int health;
     int maxHealth;
-    entt::sigh<void()> onDamage;
-    entt::sigh<void()> onDeath;
-    void takeDamage(int damage) {
+
+    void takeDamage(int damage)
+    {
         health -= damage;
-        if (health <= 0) {
-            onDeath.publish();
+        if (health < 0)
+        {
+            health = 0;
         }
-        else {
-            onDamage.publish();
-        }
-    
     }
+
+};
+
+struct Mana {
+
+    Mana(int mana, int maxMana) : mana(mana), maxMana(maxMana) {}
+
+    int mana;
+    int maxMana;
 
 };
 
