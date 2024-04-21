@@ -1,7 +1,7 @@
 
 #include <entt/entt.hpp>
 #include <raylib-cpp.hpp>
-#include "Dungeon.hpp"
+#include "data/Dungeon.hpp"
 
 class Game {
 

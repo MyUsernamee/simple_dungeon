@@ -1,6 +1,6 @@
 
 #include "DungeonGenerator.hpp"
-#include "Room.hpp"
+#include "data/Room.hpp"
 
 #pragma once
 

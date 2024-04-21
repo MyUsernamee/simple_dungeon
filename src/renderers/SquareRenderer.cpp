@@ -1,4 +1,4 @@
-#include "SquareRenderer.hpp"
+#include "renderers/SquareRenderer.hpp"
 #include "Components.hpp"
 
 SquareRenderer::SquareRenderer(raylib::Color color)

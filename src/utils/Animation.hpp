@@ -1,5 +1,7 @@
 #include <raylib-cpp.hpp>
 
+#pragma once
+
 class Animation {
 
     public:

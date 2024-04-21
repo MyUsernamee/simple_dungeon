@@ -1,8 +1,9 @@
-#include "Enemy.hpp"
+
 #include "Components.hpp"
+#include "data/Dungeon.hpp"
 
 #include <raylib-cpp.hpp>
-#include "AStar.hpp"
+#include "utils/AStar.hpp"
 
 void meleeSystem(entt::registry & registry, Dungeon &dungeon)
 {

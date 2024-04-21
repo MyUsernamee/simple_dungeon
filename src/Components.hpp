@@ -1,8 +1,22 @@
+#pragma once
 
 #include <raylib-cpp.hpp>
 #include <entt/entt.hpp>
+#include "renderers/Renderer.hpp"
 
-#pragma once
+struct Renderable {
+
+    Renderer* renderer;
+    int z;
+
+};
+
+struct Player {
+
+    raylib::Color color;
+    int gamepad; // -1 if no gamepad
+
+};
 
 struct Position {
 
@@ -43,17 +57,24 @@ struct CameraFollower {
 
 };
 
-class Health {
+struct Health {
 
-    public:
+    Health(int health, int maxHealth) : health(health), maxHealth(maxHealth) {}
 
-        Health(int health, int maxHealth);
-
-        int health;
-        int maxHealth;
-        entt::sigh<void()> onDamage;
-        entt::sigh<void()> onDeath;
-        void takeDamage(int damage);
+    int health;
+    int maxHealth;
+    entt::sigh<void()> onDamage;
+    entt::sigh<void()> onDeath;
+    void takeDamage(int damage) {
+        health -= damage;
+        if (health <= 0) {
+            onDeath.publish();
+        }
+        else {
+            onDamage.publish();
+        }
+    
+    }
 
 };
 

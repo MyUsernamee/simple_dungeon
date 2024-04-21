@@ -1,7 +1,7 @@
 #pragma once
 
 #include <raylib-cpp.hpp>
-#include "TileSet.hpp"
+#include "utils/TileSet.hpp"
 
 const int ROOM_WIDTH = 32;
 const int ROOM_HEIGHT = 32;

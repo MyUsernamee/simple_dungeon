@@ -1,9 +1,9 @@
 #include <raylib-cpp.hpp>
 #include "Game.hpp"
-#include "EmptyDungeonGenerator.hpp"
+#include "generators/EmptyDungeonGenerator.hpp"
 #define RAYGUI_IMPLEMENTATION
 #include "raygui.h"
-#include "AStar.hpp"
+#include "utils/AStar.hpp"
 #include "Components.hpp"
 
 

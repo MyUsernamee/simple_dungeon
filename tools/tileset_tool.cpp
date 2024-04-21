@@ -3,8 +3,8 @@
 #define RAYGUI_IMPLEMENTATION
 #include <raygui.h>
 #include <rlgl.h>
-#include "TileSet.hpp"
-#include <Room.hpp>
+#include "utils/TileSet.hpp"
+#include <data/Room.hpp>
 
 #define ROOM_WIDTH 32
 #define ROOM_HEIGHT 32

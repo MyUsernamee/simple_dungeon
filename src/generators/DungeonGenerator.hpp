@@ -1,6 +1,6 @@
 
 #include <raylib-cpp.hpp>
-#include "Dungeon.hpp"
+#include "data/Dungeon.hpp"
 
 /**
  * 

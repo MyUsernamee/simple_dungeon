@@ -2,21 +2,10 @@
 
 #include <raylib-cpp.hpp>
 #include <entt/entt.hpp>
-#include "renderable.hpp"
-#include "Animation.hpp"
+#include "utils/Animation.hpp"
+#include "Renderer.hpp"
 
 // TODO: Organize components and systems in a better way.
-
-struct Player {
-
-    raylib::Color color;
-    int gamepad; // -1 if no gamepad
-
-};
-
-void playerSystem(entt::registry& registry);
-entt::entity createPlayer(entt::registry& registry, raylib::Color color, int gamepad, raylib::Vector2 position = raylib::Vector2(512, 512));
-raylib::Vector2 getMovementVector(int gamepad);
 
 class PlayerRenderer : public Renderer {
 

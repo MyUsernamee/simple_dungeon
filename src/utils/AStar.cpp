@@ -1,5 +1,5 @@
 #include <raylib-cpp.hpp>
-#include "AStar.hpp"
+#include "utils/AStar.hpp"
 #include <vector>
 #include <unordered_map>
 #include <limits>

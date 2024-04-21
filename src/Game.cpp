@@ -1,13 +1,10 @@
 #include "Game.hpp"
 #include <entt/entt.hpp>
-#include "renderable.hpp"
-#include "SquareRenderer.hpp"
+#include "renderers/SquareRenderer.hpp"
 #include <raylib-cpp.hpp>
+#include "Systems.hpp"
 #include "Components.hpp"
-#include "Player.hpp"
-#include "AI.hpp"
-#include "Enemy.hpp"
-#include "Health.hpp"
+#include "renderers/PlayerRenderer.hpp"
 
 Game::Game()
 {
@@ -21,10 +18,10 @@ Game::Game()
     // for (int i = 0; i < 200; i++) {
 
     //     auto entity = registry.create();
-    //     auto& renderable_ = registry.emplace<renderable>(entity);
+    //     auto& Renderable_ = registry.emplace<Renderable>(entity);
 
-    //     renderable_.renderer = new SquareRenderer(raylib::Color(255, 0, 0, 255));
-    //     renderable_.z = 0;
+    //     Renderable_.renderer = new SquareRenderer(raylib::Color(255, 0, 0, 255));
+    //     Renderable_.z = 0;
 
     //     registry.emplace<Position>(entity, raylib::Vector2(GetRandomValue(0, GetRenderWidth()), GetRandomValue(0, GetRenderHeight())));
     //     registry.emplace<Velocity>(entity, raylib::Vector2(GetRandomValue(-100, 100), GetRandomValue(-100, 100)));
@@ -94,33 +91,33 @@ void Game::render()
     }
 
     // Sort the registry by z-index
-    registry.sort<renderable>([](const renderable& a, const renderable& b) {
+    registry.sort<Renderable>([](const Renderable& a, const Renderable& b) {
         return a.z < b.z;
     });
 
-    // We then iterate over all entities with a renderable component
-    auto view = registry.view<renderable>();
+    // We then iterate over all entities with a Renderable component
+    auto view = registry.view<Renderable>();
 
     for (auto entity : view) {
 
-        auto& renderable_ = view.get<renderable>(entity);
-        //TraceLog(LOG_INFO, "Rendering entity with z-index %d", renderable_.z);
-        renderable_.renderer->render(registry, entity);
+        auto& Renderable_ = view.get<Renderable>(entity);
+        //TraceLog(LOG_INFO, "Rendering entity with z-index %d", Renderable_.z);
+        Renderable_.renderer->render(registry, entity);
 
     }
 
     camera.EndMode();
 
     // Get everyplayer
-    auto new_view = registry.view<Player, renderable>();
+    auto new_view = registry.view<Player, Renderable>();
 
     for (auto entity : new_view) {
 
         auto& player = new_view.get<Player>(entity);
-        auto& renderable_ = new_view.get<renderable>(entity);
+        auto& Renderable_ = new_view.get<Renderable>(entity);
 
         // Convert the renderer to a player renderer
-        dynamic_cast<PlayerRenderer*>(renderable_.renderer)->statsRenderer(registry, entity);
+        dynamic_cast<PlayerRenderer*>(Renderable_.renderer)->statsRenderer(registry, entity);
 
     }
 
@@ -150,10 +147,10 @@ void Game::update(double dt)
 
         auto entity = registry.create();
         
-        auto& renderable_ = registry.emplace<renderable>(entity);
+        auto& Renderable_ = registry.emplace<Renderable>(entity);
 
-        renderable_.renderer = new SquareRenderer(raylib::Color(0, 255, 0, 255));
-        renderable_.z = 0;
+        Renderable_.renderer = new SquareRenderer(raylib::Color(0, 255, 0, 255));
+        Renderable_.z = 0;
 
         registry.emplace<Position>(entity, camera.GetScreenToWorld(GetMousePosition()));
         registry.emplace<Velocity>(entity, raylib::Vector2(GetRandomValue(-100, 100), GetRandomValue(-100, 100)));

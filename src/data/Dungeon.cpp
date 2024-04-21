@@ -1,6 +1,6 @@
-#include "Dungeon.hpp"
+#include "data/Dungeon.hpp"
 #include <algorithm>
-#include "AStar.hpp"
+#include "utils/AStar.hpp"
 
 Dungeon::Dungeon(int width, int height, int *tiles, TileSet tileSet)
 {

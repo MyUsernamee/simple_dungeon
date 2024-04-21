@@ -1,6 +1,6 @@
-#include "EmptyDungeonGenerator.hpp"
+#include "generators/EmptyDungeonGenerator.hpp"
 #include "overlapping_wfc.hpp"
-#include "AStar.hpp"
+#include "utils/AStar.hpp"
 #include <unordered_set>
 #include <delaunator.hpp>
 #include <set>

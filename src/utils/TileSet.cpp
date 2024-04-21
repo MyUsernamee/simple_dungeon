@@ -1,6 +1,6 @@
 #include "TileSet.hpp"
 #include <vector>
-#include "Dungeon.hpp"
+#include "data/Dungeon.hpp"
 
 TileSet::TileSet()
 {

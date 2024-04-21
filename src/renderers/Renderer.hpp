@@ -14,10 +14,3 @@ class Renderer {
         // Do nothing
 
 };
-
-struct renderable {
-
-    Renderer* renderer;
-    int z;
-
-};
