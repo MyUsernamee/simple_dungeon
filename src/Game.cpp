@@ -4,6 +4,7 @@
 #include <raylib-cpp.hpp>
 #include "Systems.hpp"
 #include "Components.hpp"
+#include "Constructors.hpp"
 #include "renderers/PlayerRenderer.hpp"
 
 Game::Game()
@@ -142,25 +143,14 @@ void Game::update(double dt)
     meleeSystem(registry, currentDungeon);
     healthSystem(registry);
     projectileSystem(registry);
+    particleSystem(registry);
 
     // If the user presses r we spawn an enemy at the mouse position
     if (IsKeyPressed(KEY_R)) {
 
-        auto entity = registry.create();
-        
-        auto& Renderable_ = registry.emplace<Renderable>(entity);
+        Texture particle = LoadTexture("assets/particles/up.png");
 
-        Renderable_.renderer = new SquareRenderer(raylib::Color(0, 255, 0, 255));
-        Renderable_.z = 0;
-
-        registry.emplace<Position>(entity, camera.GetScreenToWorld(GetMousePosition()));
-        registry.emplace<Velocity>(entity, raylib::Vector2(GetRandomValue(-100, 100), GetRandomValue(-100, 100)));
-        registry.emplace<Size>(entity, raylib::Vector2(50, 50));
-        registry.emplace<Collision>(entity, 0b1);
-        registry.emplace<Health>(entity, 100, 100);
-        registry.emplace<AI>(entity, 50.0, raylib::Vector2(0, 0));
-        registry.emplace<MeleeEnemy>(entity, 60, 0, 80.0, 10);
-        registry.emplace<Team>(entity, 0b10);
+        createParticle(registry, camera.GetScreenToWorld(GetMousePosition()), raylib::Vector2(GetRandomValue(-100, 100), GetRandomValue(-100, 100)), particle, {20.0, 20.0}, {0.0, 0.0}, 1.0, RED);
 
     }
     

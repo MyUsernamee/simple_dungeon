@@ -1,10 +1,10 @@
-#include "Components.hpp"
+#include "renderers/Renderer.hpp"
 #include <raylib-cpp.hpp>
-
-#pragma once
 
 class SquareRenderer : public Renderer {
 
+
+#pragma once
     public:
 
         SquareRenderer(raylib::Color color);

@@ -115,8 +115,25 @@ struct MeleeEnemy {
 struct Projectile {
 
     int damage;
-    int lifeTime;
+    double lifeTime;
     double speed;
     raylib::Vector2 direction;
+
+};
+
+struct Particle {
+
+    raylib::Vector2 gravity;
+    raylib::Vector2 random_scale;
+    double lifeTime;
+    Texture2D texture;
+    raylib::Color color;
+
+
+};
+
+struct ParticleSystem {
+
+    std::vector<Particle> particles;
 
 };

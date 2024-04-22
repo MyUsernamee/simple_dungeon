@@ -19,3 +19,4 @@ void projectileSystem(entt::registry& registry);
 void onProjectileCollision(entt::registry& registry, entt::entity projectile, entt::entity other);
 void playerSystem(entt::registry& registry);
 void projectileSystem(entt::registry& registry);
+void particleSystem(entt::registry& registry);
