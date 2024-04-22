@@ -2,6 +2,9 @@
 #include <entt/entt.hpp>
 #include <raylib-cpp.hpp>
 #include "data/Dungeon.hpp"
+#include "unordered_map"
+#include "spells/Spell.hpp"
+#include "spells/CastDirection.hpp"
 
 #pragma once
 
@@ -33,5 +36,6 @@ class Game {
         entt::registry registry;
         raylib::Camera2D camera;
         Dungeon currentDungeon;
+        std::vector<Spell>  spells;
 
 };

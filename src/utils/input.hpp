@@ -1,7 +1,6 @@
 
 #pragma once
 #include <raylib-cpp.hpp>
-#include "spells/Spell.hpp"
 
 enum InputAction { 
     INTERACT, // TODO: Add more actions

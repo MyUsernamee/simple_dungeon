@@ -34,7 +34,7 @@ Game::Game()
 
     // createPlayer(registry, raylib::Color(255, 0, 0, 255), -1);
 
-    
+    spells = loadSpells();
 
 }
 

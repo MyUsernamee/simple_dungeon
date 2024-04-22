@@ -3,7 +3,6 @@
 #include <raylib-cpp.hpp>
 #include <entt/entt.hpp>
 #include "renderers/Renderer.hpp"
-#include "Game.hpp"
 #include "spells/CastDirection.hpp"
 
 /*
@@ -106,7 +105,7 @@ struct SpellCaster {
      * @param direction The direction to add to the current cast directions.
     */
     void addCastDirection(entt::registry &registry, raylib::Vector2 position, CastDirection direction); // Add a cast direction to the current cast directions and spawn particles
-    void cast(entt::registry &registry);
+    
 
 };
 

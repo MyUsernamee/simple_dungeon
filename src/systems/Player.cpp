@@ -4,6 +4,7 @@
 #include "utils/consts.hpp"
 
 #include "utils/input.hpp"
+#include <data/Dungeon.hpp>
 
 void playerSystem(entt::registry &registry)
 {

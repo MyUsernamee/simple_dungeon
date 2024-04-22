@@ -1,10 +1,11 @@
 #include <raylib-cpp.hpp>
 #include <vector>
-#include "Components.hpp"
-#include "Game.hpp"
+#include "../Components.hpp"
 #include "spells/CastDirection.hpp"
 
 #pragma once
+
+class Game; // Forward declaration
 
 class Spell {
 
@@ -20,5 +21,3 @@ class Spell {
         std::function<void(Game*, raylib::Vector2)> castFunction; // Function to cast the spell
 
 };
-
-std::vector<Spell> loadSpells(); // Load all, not from file but maybe at some point.

@@ -2,7 +2,7 @@
 #include "Components.hpp"
 #include "renderers/SquareRenderer.hpp"
 
-void castFireball(raylib::Vector2 position, Game* game)
+void castFireball(Game* game, raylib::Vector2 position)
 {
     auto& registry = game->getRegistry();
     auto entity = registry.create();
@@ -11,5 +11,5 @@ void castFireball(raylib::Vector2 position, Game* game)
     registry.emplace<Renderable>(entity, new SquareRenderer(raylib::Color{255, 0, 0, 255}), 1);
     registry.emplace<Size>(entity, raylib::Vector2{16, 16});
     registry.emplace<Collision>(entity, 0b10);
-    
+
 }
