@@ -6,6 +6,7 @@
 #include "Components.hpp"
 #include "Constructors.hpp"
 #include "renderers/PlayerRenderer.hpp"
+#include "renderers/SpellCasterRenderer.hpp"
 
 Game::Game()
 {
@@ -106,6 +107,8 @@ void Game::render()
         Renderable_.renderer->render(registry, entity);
 
     }
+
+    spellCasterRenderer(registry);
 
     camera.EndMode();
 

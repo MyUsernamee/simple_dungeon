@@ -28,6 +28,7 @@ entt::entity createPlayer(entt::registry &registry, raylib::Color color, int gam
     registry.emplace<CameraFollower>(player, 1, raylib::Vector2(25, 25));
     registry.emplace<Health>(player, 100, 100);
     registry.emplace<Team>(player, 0b01);
+    registry.emplace<SpellCaster>(player, std::vector<CastDirection>());
 
     
 

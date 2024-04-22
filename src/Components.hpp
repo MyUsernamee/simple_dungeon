@@ -4,6 +4,7 @@
 #include <entt/entt.hpp>
 #include "renderers/Renderer.hpp"
 #include "Game.hpp"
+#include "spells/CastDirection.hpp"
 
 /*
 
@@ -87,6 +88,25 @@ struct Mana {
 
     int mana;
     int maxMana;
+
+};
+
+// TODO: Merge SpellCaster and Mana
+/**
+ * @brief Adds the ability to cast spells to a object.
+*/
+struct SpellCaster {
+
+    std::vector<CastDirection> currentCastDirections; // The current cast directions for the spell
+
+    /**
+     * @brief Adds a cast direction to the current cast directions and spawns particles.
+     * @param registry The registry to spawn the particles in.
+     * @param position The position to spawn the particles at.
+     * @param direction The direction to add to the current cast directions.
+    */
+    void addCastDirection(entt::registry &registry, raylib::Vector2 position, CastDirection direction); // Add a cast direction to the current cast directions and spawn particles
+    void cast(entt::registry &registry);
 
 };
 

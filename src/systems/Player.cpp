@@ -8,7 +8,7 @@
 void playerSystem(entt::registry &registry)
 {
 
-    auto view = registry.view<Player, Velocity, Position>();
+    auto view = registry.view<Player, Velocity, Position, SpellCaster>();
     bool* player_exists = new bool[4]; // TODO: Make this more efficient and make it a constant / variable
 
     for (int i = 0; i < 4; i++)
@@ -21,6 +21,7 @@ void playerSystem(entt::registry &registry)
         auto &player = view.get<Player>(entity);
         auto &position = view.get<Position>(entity);
         auto &velocity = view.get<Velocity>(entity);
+        auto &spellCaster = view.get<SpellCaster>(entity);
 
         raylib::Vector2 movement = getMovementVector(player.gamepad);
         velocity.velocity = movement * 100.0; // TODO: Make this a constant / variable
@@ -28,6 +29,13 @@ void playerSystem(entt::registry &registry)
         if (isActionPressed(player.gamepad, ATTACK))
         {
             createProjectile(registry, position.position + movement.Normalize() * 40, movement, 500, 10);
+        }
+
+        CastDirection castDirection = getCastDirection(player.gamepad);
+
+        if (castDirection != CastDirection::NONE)
+        {
+            spellCaster.addCastDirection(registry, position.position, castDirection);
         }
 
         player_exists[player.gamepad + 1] = true;

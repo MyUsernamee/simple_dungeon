@@ -1,18 +1,10 @@
 #include <raylib-cpp.hpp>
 #include <vector>
-#include <Components.hpp>
+#include "Components.hpp"
+#include "Game.hpp"
+#include "spells/CastDirection.hpp"
 
 #pragma once
-
-/**
- * @brief Represents a direction that is needed to be pressed to cast a spell.
-*/
-enum class CastDirection {
-    Up,
-    Down,
-    Left,
-    Right
-};
 
 class Spell {
 
@@ -25,7 +17,8 @@ class Spell {
         std::vector<CastDirection> castDirections; // Directions that need to be pressed to cast the spell
         bool cast_on_death; // Cast when the projectile dies, even if it didn't hit anything
 
-        virtual void cast(raylib::Vector2 position, raylib::Vector2 direction) = 0; // When the projectile hits something or the lifetime is over
-
+        std::function<void(Game*, raylib::Vector2)> castFunction; // Function to cast the spell
 
 };
+
+std::vector<Spell> loadSpells(); // Load all, not from file but maybe at some point.

@@ -1,6 +1,7 @@
 
 #pragma once
 #include <raylib-cpp.hpp>
+#include "spells/Spell.hpp"
 
 enum InputAction { 
     INTERACT, // TODO: Add more actions
@@ -85,5 +86,34 @@ bool isActionPressed(int gamepad, InputAction action) {
     }
 
     return false;
+
+}
+
+CastDirection getCastDirection(int gamepad) {
+
+    if (gamepad == -1) {
+
+        if (IsKeyDown(KEY_UP)) return CastDirection::UP; // TODO: Create a key map / joystick map
+        if (IsKeyDown(KEY_DOWN)) return CastDirection::DOWN;
+        if (IsKeyDown(KEY_LEFT)) return CastDirection::LEFT;
+        if (IsKeyDown(KEY_RIGHT)) return CastDirection::RIGHT;
+
+    }
+
+    if (IsGamepadAvailable(gamepad)) {
+        
+        if (IsGamepadButtonPressed(gamepad, GAMEPAD_BUTTON_LEFT_FACE_UP)) return CastDirection::UP;
+        if (IsGamepadButtonPressed(gamepad, GAMEPAD_BUTTON_LEFT_FACE_DOWN)) return CastDirection::DOWN;
+        if (IsGamepadButtonPressed(gamepad, GAMEPAD_BUTTON_LEFT_FACE_LEFT)) return CastDirection::LEFT;
+        if (IsGamepadButtonPressed(gamepad, GAMEPAD_BUTTON_LEFT_FACE_RIGHT)) return CastDirection::RIGHT;
+
+    }
+    else {
+
+        TraceLog(LOG_WARNING, "Gamepad %i not available", gamepad);
+
+    }
+
+    return CastDirection::NONE;
 
 }
