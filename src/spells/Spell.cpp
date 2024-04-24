@@ -13,12 +13,12 @@ std::vector<Spell> loadSpells()
     fireball.manaCost = 10;
     fireball.projectile = {
         0,
-        60,
-        10,
+        600,
+        1000,
         {0.0, 0.0} // This is the direction, it will be set when the spell is cast
     };
-    fireball.projectileTexture = LoadTextureCached("assets/fireball.png");
-    fireball.spellTexture = LoadTextureCached("assets/fireball_icon.png");
+    fireball.projectileTexture = LoadTextureCached("assets/particles/up.png");
+    fireball.spellTexture = LoadTextureCached("assets/spells/fireball.png");
     fireball.castDirections = {CastDirection::UP, CastDirection::RIGHT, CastDirection::DOWN, CastDirection::LEFT};
     fireball.cast_on_death = false;
     fireball.castFunction = castFireball;

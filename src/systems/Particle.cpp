@@ -3,8 +3,17 @@
 #include "Components.hpp"
 #include <raylib-cpp.hpp>
 #include "utils/utils.hpp"
+#include "Game.hpp"
 
-void particleSystem(entt::registry& registry) {
+void particleSystem(Game* game, double dt) {
+
+    auto& registry = game->getRegistry();
+    particleSystemRegistry(registry, dt);
+
+}
+
+void particleSystemRegistry(entt::registry& registry, double dt) {
+    
     auto view = registry.view<Particle, Position, Velocity>();
     for (auto entity : view) {
         auto& particle = view.get<Particle>(entity);

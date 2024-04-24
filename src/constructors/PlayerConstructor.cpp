@@ -1,6 +1,7 @@
 
 #include "Constructors.hpp"
 #include "renderers/PlayerRenderer.hpp"
+#include "renderers/SquareRenderer.hpp"
 #include "Components.hpp"
 
 entt::entity createPlayer(entt::registry &registry, raylib::Color color, int gamepad, raylib::Vector2 position)
@@ -30,7 +31,13 @@ entt::entity createPlayer(entt::registry &registry, raylib::Color color, int gam
     registry.emplace<Team>(player, 0b01);
     registry.emplace<SpellCaster>(player, std::vector<CastDirection>());
 
-    
+    auto cursor = registry.create();
+    registry.emplace<Position>(cursor, position);
+    registry.emplace<Renderable>(cursor, new SquareRenderer(raylib::Color(255, 255, 255, 255)), 1);
+    registry.emplace<Size>(cursor, raylib::Vector2(32, 32));
+    registry.emplace<CameraFollower>(cursor, 1, raylib::Vector2(25, 25));
+
+    registry.get<Player>(player).cursorEntity = cursor;
 
     if (count > 2)
     {

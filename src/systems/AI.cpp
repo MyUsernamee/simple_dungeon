@@ -1,8 +1,11 @@
 
 #include "Components.hpp"
+#include "Game.hpp"
 
-void aiSystem(entt::registry &registry)
+void aiSystem(Game* game, double dt)
 {
+
+    auto &registry = game->getRegistry();
 
     auto view = registry.view<AI, Velocity>();
 

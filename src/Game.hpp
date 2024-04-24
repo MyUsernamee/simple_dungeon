@@ -8,6 +8,7 @@
 
 #pragma once
 
+// Generic game class that contains the registry and systems
 class Game {
 
     public:
@@ -18,24 +19,45 @@ class Game {
         void render();
         void update(double dt);
 
-        
-        void physicsSystem(double dt);
-        void collisionSystem();
-        void cameraFollowerSystem();
-
         entt::registry& getRegistry() {
             return registry;
         }
         
-        void setDungeon(Dungeon dungeon) {
-            currentDungeon = dungeon;
+        void registerSystem(std::function<void(Game* game, double dt)> system) {
+            systems.push_back(system);
+        }
+        // Used to set the systems in the game
+        void setSystems(std::vector<std::function<void(Game* game, double dt)>> systems) {
+            this->systems = systems;
+        }
+        raylib::Camera2D& getCamera() {
+            return camera;
+        }
+
+        std::vector<Spell>& getSpells() {
+            return spells;
+        }
+
+        // Literally the same things as getting a dungeon from the registry, just a helper
+        Dungeon& getDungeon() {
+            
+            auto view = registry.view<Dungeon>();
+
+            // Get the first entity
+            auto entity = *view.begin();
+
+            return view.get<Dungeon>(entity);
+
         }
 
     private:
 
+        std::vector<std::function<void(Game* game, double dt)>> systems;
+        std::vector<std::function<void(const Game* game, double dt)>> renderSystems;
+
         entt::registry registry;
         raylib::Camera2D camera;
-        Dungeon currentDungeon;
-        std::vector<Spell>  spells;
+
+        std::vector<Spell> spells;
 
 };

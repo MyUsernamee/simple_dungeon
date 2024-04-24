@@ -5,6 +5,7 @@
 enum InputAction { 
     INTERACT, // TODO: Add more actions
     ATTACK,
+    AIM
 };
 
 raylib::Vector2 getMovementVector(int gamepad) {
@@ -35,6 +36,33 @@ raylib::Vector2 getMovementVector(int gamepad) {
     }
 
     return movement;
+
+}
+
+raylib::Vector2 getAimVector(int gamepad) {
+
+    raylib::Vector2 aim = raylib::Vector2(0, 0);
+
+    if (gamepad == -1) {
+
+        aim = (raylib::Vector2)GetMousePosition() - raylib::Vector2{GetRenderWidth() / 2, GetRenderHeight() / 2}; // TODO: Create a key map / joystick map
+        aim = aim.Normalize();
+
+    }
+
+    if (IsGamepadAvailable(gamepad)) {
+
+        aim.x = GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_X);
+        aim.y = GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_Y);
+
+    }
+    else {
+
+        TraceLog(LOG_WARNING, "Gamepad %i not available", gamepad);
+
+    }
+
+    return aim;
 
 }
 

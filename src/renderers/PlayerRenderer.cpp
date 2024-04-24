@@ -20,6 +20,9 @@ void PlayerRenderer::render(const entt::registry &registry, const entt::entity &
     auto &transform = registry.get<Position>(entity);
     auto &player = registry.get<Player>(entity);
     auto &velocity = registry.get<Velocity>(entity);
+    auto &renderable = registry.get<Renderable>(entity);
+
+    color.a = renderable.opacity;
     
     Texture2D frame;
 

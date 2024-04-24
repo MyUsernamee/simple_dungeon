@@ -2,8 +2,12 @@
 #include "Components.hpp"
 #include "renderers/SquareRenderer.hpp"
 
-void projectileSystem(entt::registry &registry)
+#include "Game.hpp"
+
+void projectileSystem(Game* game, double dt)
 {
+
+    auto &registry = game->getRegistry();
 
     auto view = registry.view<Projectile, Position, Velocity, Collision>();
     for (auto entity : view)
@@ -38,10 +42,15 @@ void projectileSystem(entt::registry &registry)
                     otherHealth->takeDamage(projectile.damage);
                 }
 
+                if (projectile.onHit.has_value())
+                {
+                    projectile.onHit.value()(game, entity, other);
+                }
                 if (registry.valid(entity))
                 {
                     registry.destroy(entity);
                 }
+
 
             }
         }

@@ -5,4 +5,4 @@
 #include <raylib-cpp.hpp>
 #include "Game.hpp"
 
-void castFireball(Game* game, raylib::Vector2 position);
+void castFireball(Game* game, entt::entity entity, entt::entity other);

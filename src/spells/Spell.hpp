@@ -18,6 +18,8 @@ class Spell {
         std::vector<CastDirection> castDirections; // Directions that need to be pressed to cast the spell
         bool cast_on_death; // Cast when the projectile dies, even if it didn't hit anything
 
-        std::function<void(Game*, raylib::Vector2)> castFunction; // Function to cast the spell
+        std::function<void(Game* game, entt::entity entity, entt::entity other)> castFunction;
 
 };
+
+std::vector<Spell> loadSpells();

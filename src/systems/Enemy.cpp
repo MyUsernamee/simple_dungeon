@@ -4,9 +4,14 @@
 
 #include <raylib-cpp.hpp>
 #include "utils/AStar.hpp"
+#include "Game.hpp"
 
-void meleeSystem(entt::registry & registry, Dungeon &dungeon)
+void meleeSystem(Game* game, double dt)
 {
+
+    auto &registry = game->getRegistry();
+    // Get the dungeon from the game.
+    auto &dungeon = game->getDungeon();
 
     auto view = registry.view<AI, MeleeEnemy, Team, Position, Size>();
 

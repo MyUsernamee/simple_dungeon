@@ -5,11 +5,15 @@
 
 #include "utils/input.hpp"
 #include <data/Dungeon.hpp>
+#include "Game.hpp"
+#include <algorithm>
 
-void playerSystem(entt::registry &registry)
+void playerSystem(Game* game, double dt)
 {
 
-    auto view = registry.view<Player, Velocity, Position, SpellCaster>();
+    auto &registry = game->getRegistry();
+
+    auto view = registry.view<Player, Velocity, Position, SpellCaster, Size>();
     bool* player_exists = new bool[4]; // TODO: Make this more efficient and make it a constant / variable
 
     for (int i = 0; i < 4; i++)
@@ -23,13 +27,27 @@ void playerSystem(entt::registry &registry)
         auto &position = view.get<Position>(entity);
         auto &velocity = view.get<Velocity>(entity);
         auto &spellCaster = view.get<SpellCaster>(entity);
+        auto &size = view.get<Size>(entity);
+
+        // Calculate the center
+        auto center = raylib::Vector2(position.position.x + size.size.x / 2, position.position.y + size.size.y / 2);
+
+        // Get the cursor entity
+        auto cursor = registry.get<Player>(entity).cursorEntity;
+        auto &cursorPosition = registry.get<Position>(cursor);
+        auto &cursorRenderable = registry.get<Renderable>(cursor);
 
         raylib::Vector2 movement = getMovementVector(player.gamepad);
         velocity.velocity = movement * 100.0; // TODO: Make this a constant / variable
 
+        raylib::Vector2 aim = getAimVector(player.gamepad);
+        cursorPosition.position = center + aim * 100.0; // TODO: Make this a constant / variable
+
+        cursorRenderable.opacity = 255 * std::min(aim.Length(), 1.0f);
+
         if (isActionPressed(player.gamepad, ATTACK))
         {
-            createProjectile(registry, position.position + movement.Normalize() * 40, movement, 500, 10);
+            spellCaster.cast(game, entity, aim);
         }
 
         CastDirection castDirection = getCastDirection(player.gamepad);
@@ -37,6 +55,7 @@ void playerSystem(entt::registry &registry)
         if (castDirection != CastDirection::NONE)
         {
             spellCaster.addCastDirection(registry, position.position, castDirection);
+            SetGamepadVibration(player.gamepad, 0.25 * spellCaster.currentCastDirections.size(), 0.25 * spellCaster.currentCastDirections.size());
         }
 
         player_exists[player.gamepad + 1] = true;

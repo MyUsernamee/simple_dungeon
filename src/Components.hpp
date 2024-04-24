@@ -5,16 +5,24 @@
 #include "renderers/Renderer.hpp"
 #include "spells/CastDirection.hpp"
 
+#include <cereal/cereal.hpp>
+
+#include <optional>
+#include <functional>
+
 /*
 
     This file contains all of the components that can be added to an entity.
 
 */
 
+class Game; // Forward declaration
+
 struct Renderable {
 
     Renderer* renderer;
     int z;
+    int opacity = 255;
 
 };
 
@@ -22,6 +30,7 @@ struct Player {
 
     raylib::Color color;
     int gamepad; // -1 if no gamepad
+    entt::entity cursorEntity;
 
 };
 
@@ -105,7 +114,7 @@ struct SpellCaster {
      * @param direction The direction to add to the current cast directions.
     */
     void addCastDirection(entt::registry &registry, raylib::Vector2 position, CastDirection direction); // Add a cast direction to the current cast directions and spawn particles
-    
+    void cast(Game* game, entt::entity entity, raylib::Vector2 direction); // Cast the spell
 
 };
 
@@ -138,6 +147,8 @@ struct Projectile {
     double speed;
     raylib::Vector2 direction;
 
+    std::optional<std::function<void(Game* game, entt::entity entity, entt::entity other)>> onHit;
+
 };
 
 struct Particle {
@@ -145,14 +156,30 @@ struct Particle {
     raylib::Vector2 gravity;
     raylib::Vector2 random_scale;
     double lifeTime;
-    Texture2D texture;
-    raylib::Color color;
 
+    template <class Archive>
+    void serialize(Archive &archive)
+    {
+        archive(CEREAL_NVP(gravity), CEREAL_NVP(random_scale), CEREAL_NVP(lifeTime), CEREAL_NVP(texture), CEREAL_NVP(color));
+    }
 
 };
 
 struct ParticleSystem {
 
-    std::vector<Particle> particles;
+    Particle particle; // The particle to spawn
+    double spawnRate; // The rate to spawn the particles
+    double spawnTimer; // The timer to spawn the particles
+    int maxParticles; // The maximum amount of particles to spawn
+
+
+};
+
+/**
+ * Changes the opacity of the renderable based on the health of the entity.
+*/
+struct DungeonOcclusion {
+
+    
 
 };

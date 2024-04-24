@@ -9,14 +9,21 @@
 
 #include <entt/entt.hpp>
 #include <raylib-cpp.hpp>
-#include "data/Dungeon.hpp"
 
-void aiSystem(entt::registry& registry);
-void healthSystem(entt::registry & registry);
-void meleeSystem(entt::registry& registry, Dungeon& dungeon);
-void rangedSystem(entt::registry& registry);
-void projectileSystem(entt::registry& registry);
-void onProjectileCollision(entt::registry& registry, entt::entity projectile, entt::entity other);
-void playerSystem(entt::registry& registry);
-void projectileSystem(entt::registry& registry);
-void particleSystem(entt::registry& registry);
+class Game; // Forward declaration
+
+void aiSystem(Game* game, double dt);
+void healthSystem(Game* game, double dt);
+void meleeSystem(Game* game, double dt);
+void rangedSystem(Game* game, double dt);
+void projectileSystem(Game* game, double dt);
+void playerSystem(Game* game, double dt);
+void projectileSystem(Game* game, double dt);
+void particleSystem(Game* game, double dt);
+void physicsSystem(Game* game, double dt);
+void collisionSystem(Game* game, double dt);
+void cameraFollowerSystem(Game* game, double dt);
+void spellCastSystem(Game* game, double dt);
+void particleSystemRegistry(entt::registry& registry, double dt);
+
+std::vector<std::function<void(Game*, double)>> getSystems();

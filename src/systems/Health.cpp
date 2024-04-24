@@ -1,10 +1,12 @@
 
 
 #include "Components.hpp"
+#include "Game.hpp"
 
-
-void healthSystem(entt::registry & registry)
+void healthSystem(Game* game, double dt)
 {
+
+    auto &registry = game->getRegistry();
 
     auto view = registry.view<Health>();
 

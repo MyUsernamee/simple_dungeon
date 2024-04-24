@@ -9,7 +9,7 @@ entt::entity createParticle(entt::registry& registry, raylib::Vector2 position, 
 
     auto entity = registry.create();
 
-    registry.emplace<Particle>(entity, gravity, random_scale, lifeTime, texture, color);
+    registry.emplace<Particle>(entity, gravity, random_scale, lifeTime);
     registry.emplace<Velocity>(entity, velocity);
     registry.emplace<Position>(entity, position);
     registry.emplace<Size>(entity, raylib::Vector2(texture.width, texture.height));
