@@ -18,7 +18,7 @@ void physicsSystem(Game* game, double dt)
         position.position.x += velocity.velocity.x * dt;
         position.position.y += velocity.velocity.y * dt;
 
-        velocity.velocity *= 0.9; // TODO: Create seperate function / variable for this and make it a component
+        velocity.velocity *= 1.0; // TODO: Create seperate function / variable for this and make it a component
 
     }
 

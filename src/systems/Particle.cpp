@@ -20,13 +20,13 @@ void particleSystemRegistry(entt::registry& registry, double dt) {
         auto& position = view.get<Position>(entity);
         auto& velocity = view.get<Velocity>(entity);
 
-        particle.lifeTime -= GetFrameTime();
+        particle.lifeTime -= dt;
         if (particle.lifeTime <= 0) {
             registry.destroy(entity);
         }
 
         velocity.velocity += raylib::Vector2{GetRandomValue(-1.0, 1.0), GetRandomValue(-1.0, 1.0)} * particle.random_scale;
-        velocity.velocity += particle.gravity * GetFrameTime();
+        velocity.velocity += particle.gravity * dt;
 
         
     }

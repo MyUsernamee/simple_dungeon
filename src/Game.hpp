@@ -30,6 +30,11 @@ class Game {
         void setSystems(std::vector<std::function<void(Game* game, double dt)>> systems) {
             this->systems = systems;
         }
+
+        std::vector<std::function<void(Game* game, double dt)>>& getSystems() {
+            return systems;
+        }
+
         raylib::Camera2D& getCamera() {
             return camera;
         }

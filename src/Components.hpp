@@ -160,7 +160,7 @@ struct Particle {
     template <class Archive>
     void serialize(Archive &archive)
     {
-        archive(CEREAL_NVP(gravity), CEREAL_NVP(random_scale), CEREAL_NVP(lifeTime), CEREAL_NVP(texture), CEREAL_NVP(color));
+        archive(CEREAL_NVP(gravity), CEREAL_NVP(random_scale), CEREAL_NVP(lifeTime));
     }
 
 };

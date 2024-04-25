@@ -6,14 +6,66 @@
 #include "Components.hpp"
 #include "Systems.hpp"
 #include "renderers/TextureRenderer.hpp"
+#include "Game.hpp"
 
 #include <entt/entt.hpp>
+
+class DummyGame: public Game {
+
+    public:
+
+        DummyGame() {
+
+            
+
+        }
+
+        void run() {
+
+            update(GetFrameTime());
+            this->render();
+
+        }
+
+        void render() {
+
+            auto view = this->getRegistry().view<Renderable, Position, Size>();
+
+            for (auto entity : view) {
+
+                auto& renderable = view.get<Renderable>(entity);
+                auto& position = view.get<Position>(entity);
+                auto& size = view.get<Size>(entity);
+
+                renderable.renderer->render(this->getRegistry(), entity);
+
+            }
+
+        }
+
+        void update(double dt) {
+
+            std::vector<std::function<void(Game* game, double dt)>> systems = this->getSystems();
+
+            for (auto system : systems) {
+
+                system(this, dt);
+
+            }
+
+        }
+
+};
 
 int main () {
 
     raylib::Window w(800, 600, "Particle Designer");
 
-    entt::registry registry;
+    DummyGame game = DummyGame();
+    entt::registry& registry = game.getRegistry();
+
+    game.registerSystem(&particleSystem);
+    game.registerSystem(&physicsSystem);
 
     bool particleSystemDesigner = false;
 
@@ -54,29 +106,16 @@ int main () {
 
         GuiWindowBox((Rectangle){ GetRenderWidth() - 200, 0, 200, GetRenderHeight() }, "Particle Designer");
         GuiColorPicker((Rectangle){ GetRenderWidth() - 190, 40, 150, 180 }, "Color", &color);
-        GuiSliderBar((Rectangle){ GetRenderWidth() - 190, 250, 180, 20 }, TextFormat("Scale X: %.2f", random_scale_x), NULL, &random_scale_x, 0.0, 10.0);
-        GuiSliderBar((Rectangle){ GetRenderWidth() - 190, 280, 180, 20 }, TextFormat("Scale Y: %.2f", random_scale_y), NULL, &random_scale_y, 0.0, 10.0);
+        GuiSliderBar((Rectangle){ GetRenderWidth() - 190, 250, 180, 20 }, TextFormat("Scale X: %.2f", random_scale_x), NULL, &random_scale_x, 0.0, 100.0);
+        GuiSliderBar((Rectangle){ GetRenderWidth() - 190, 280, 180, 20 }, TextFormat("Scale Y: %.2f", random_scale_y), NULL, &random_scale_y, 0.0, 100.0);
         GuiTextBox((Rectangle){ GetRenderWidth() - 190, 310, 180, 20 }, texture_path, 256, true);
-        GuiSliderBar((Rectangle){ GetRenderWidth() - 190, 340, 180, 20 }, TextFormat("Gravity X: %.2f", gravity_x), NULL, &gravity_x, -10.0, 10.0);
-        GuiSliderBar((Rectangle){ GetRenderWidth() - 190, 370, 180, 20 }, TextFormat("Gravity Y: %.2f", gravity_y), NULL, &gravity_y, -10.0, 10.0);
+        GuiSliderBar((Rectangle){ GetRenderWidth() - 190, 340, 180, 20 }, TextFormat("Gravity X: %.2f", gravity_x), NULL, &gravity_x, -100.0, 100.0);
+        GuiSliderBar((Rectangle){ GetRenderWidth() - 190, 370, 180, 20 }, TextFormat("Gravity Y: %.2f", gravity_y), NULL, &gravity_y, -100.0, 100.0);
         GuiSliderBar((Rectangle){ GetRenderWidth() - 190, 400, 180, 20 }, TextFormat("Life Time: %.2f", life_time), NULL, &life_time, 0.0, 100.0);
 
         if (registry.valid(particle)) {
 
-            renderable.renderer->render(registry, particle);
-            particleSystemRegistry(registry, GetFrameTime());
-
-            // Physics
-            auto view = registry.view<Particle, Position, Velocity>();
-            for (auto entity : view) {
-                auto& particle = view.get<Particle>(entity);
-                auto& position = view.get<Position>(entity);
-                auto& velocity = view.get<Velocity>(entity);
-
-
-                position.position += velocity.velocity * GetFrameTime();
-
-            }
+            game.run();
 
         }
         else {
