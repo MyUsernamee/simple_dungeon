@@ -40,8 +40,8 @@ void collisionSystem(Game* game, double dt)
             otherRect.x = otherPosition.position.x;
             otherRect.y = otherPosition.position.y;
 
-            auto center = position.position + size.size / 2;
-            auto otherCenter = otherPosition.position + otherSize.size / 2;
+            auto center = position.position;
+            auto otherCenter = otherPosition.position;
 
             if (center.Distance(otherCenter) < (size.size.x + otherSize.size.x) / 2.0 && collision.bitMask & otherCollision.bitMask) {
 
@@ -103,8 +103,8 @@ void collisionSystem(Game* game, double dt)
         rect.y = position.position.y;
 
         // We get all tiles within the rectangle
-        int x1 = rect.x / TILE_SIZE;
-        int y1 = rect.y / TILE_SIZE;
+        int x1 = rect.x / TILE_SIZE - 1;
+        int y1 = rect.y / TILE_SIZE - 1;
 
         int x2 = (rect.x + rect.width) / TILE_SIZE + 1;
         int y2 = (rect.y + rect.height) / TILE_SIZE + 1;
@@ -121,12 +121,12 @@ void collisionSystem(Game* game, double dt)
                     continue;
                 }
 
-                if (currentDungeon.getTile(x, y).solid) {
+                if (currentDungeon.getTile(x, y).getBoolProperty("solid")) {
 
                     raylib::Rectangle tileRect = raylib::Rectangle(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
 
                     // Get the closest point on the rectangle to the center of the entity
-                    raylib::Vector2 center = position.position + size.size / 2;
+                    raylib::Vector2 center = position.position;
                     raylib::Vector2 closest = center;
                     closest.x = std::clamp(closest.x, tileRect.x, tileRect.x + tileRect.width);
                     closest.y = std::clamp(closest.y, tileRect.y, tileRect.y + tileRect.height);

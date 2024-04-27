@@ -9,17 +9,9 @@
 
 */
 
-#include <raylib-cpp.hpp>
-#include <entt/entt.hpp>
-#include <limits>
-
+#include "utils.hpp"
 #include <cereal/cereal.hpp>
 
-#pragma once
-
-double GetRandomValue(double min, double max);
-
-template <typename Archive>
-void serialize(Archive &archive, raylib::Vector2& vector) {
-    archive(CEREAL_NVP(vector.x), CEREAL_NVP(vector.y));
+double GetRandomValue(double min, double max) {
+    return min + (static_cast<float>(GetRandomValue(0, std::numeric_limits<int>::max())) / static_cast<float>(std::numeric_limits<int>::max())) * (max - min);
 }

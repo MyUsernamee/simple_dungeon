@@ -75,7 +75,7 @@ void Dungeon::render(raylib::Camera2D camera, std::vector<raylib::Vector2> visib
 
             Tile tile = tileSet.getTile(tiles[y * width + x]);
 
-            DrawTextureEx(tile.texture, {(float)x * TILE_SIZE, (float)y * TILE_SIZE}, 0, TILE_SIZE / tile.texture.width, raylib::Color{255, 255, 255, (unsigned char)(opacity[y * width + x] * 255)});
+            //DrawTextureEx(tile.texture, {(float)x * TILE_SIZE, (float)y * TILE_SIZE}, 0, TILE_SIZE / tile.texture.width, raylib::Color{255, 255, 255, (unsigned char)(opacity[y * width + x] * 255)});
 
         }
 
@@ -120,12 +120,12 @@ std::vector<raylib::Vector2> Dungeon::pathFind(raylib::Vector2 start, raylib::Ve
 
     if (start.x < 0 || start.x >= width || start.y < 0 || start.y >= height) return {};
     if (end.x < 0 || end.x >= width || end.y < 0 || end.y >= height) return {};
-    if (tileSet.getTile(tiles[(int)start.y * width + (int)start.x]).solid) return {};
-    if (tileSet.getTile(tiles[(int)end.y * width + (int)end.x]).solid) return {};
+    if (tileSet.getTile(tiles[(int)start.y * width + (int)start.x]).getBoolProperty("solid")) return {};
+    if (tileSet.getTile(tiles[(int)end.y * width + (int)end.x]).getBoolProperty("solid")) return {};
     
     int* map = new int[width * height];
     for (int i = 0; i < width * height; i++) {
-        map[i] = tileSet.getTile(tiles[i]).solid ? 1 : 0;
+        map[i] = tileSet.getTile(tiles[i]).getBoolProperty("solid") ? 1 : 0;
     }
 
     std::vector<raylib::Vector2> path = findPath(start, end, map, width, height, heuristic);

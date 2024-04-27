@@ -7,6 +7,10 @@
 
 #include <cereal/cereal.hpp>
 
+#include "utils/Animation.hpp"
+
+#include "utils/utils.hpp"
+
 #include <optional>
 #include <functional>
 
@@ -20,9 +24,41 @@ class Game; // Forward declaration
 
 struct Renderable {
 
-    Renderer* renderer;
-    int z;
+    Texture2D texture;
+    raylib::Color color;
+    int z = 0;
     int opacity = 255;
+
+    template <class Archive>
+    void save(Archive &archive) const
+    {
+        int fileSize = 0;
+        std::string textureData = (char*)ExportImageToMemory(LoadImageFromTexture(texture), ".png", &fileSize);
+        archive(CEREAL_NVP(z), CEREAL_NVP(opacity), CEREAL_NVP(textureData));
+    }
+
+    template <class Archive>
+    void load(Archive &archive)
+    {
+
+        std::string textureData;
+        archive(CEREAL_NVP(z), CEREAL_NVP(opacity), CEREAL_NVP(textureData));
+        // Convert the texture data to const unsinged char* from char *
+        const unsigned char* textureDataConst = reinterpret_cast<const unsigned char*>(textureData.c_str());
+        Image image = LoadImageFromMemory(".png", textureDataConst, textureData.size());
+        texture = LoadTextureFromImage(image);
+
+    }
+
+};
+
+struct Animator {
+
+    std::vector<Animation> animations;
+    int currentAnimation = 0;
+    int currentFrame = 0;
+    float frameTime = 0.0f;
+    int fps = 4;
 
 };
 
@@ -32,17 +68,31 @@ struct Player {
     int gamepad; // -1 if no gamepad
     entt::entity cursorEntity;
 
+
+
 };
 
 struct Position {
 
     raylib::Vector2 position;
 
+    template <class Archive>
+    void serialize(Archive &archive)
+    {
+        archive(CEREAL_NVP(position));
+    }
+
 };
 
 struct Velocity {
 
     raylib::Vector2 velocity;
+
+    template <class Archive>
+    void serialize(Archive &archive)
+    {
+        archive(CEREAL_NVP(velocity));
+    }
 
 };
 
@@ -52,6 +102,12 @@ struct Velocity {
 struct Size {
 
     raylib::Vector2 size;
+
+    template <class Archive>
+    void serialize(Archive &archive)
+    {
+        archive(CEREAL_NVP(size));
+    }
 
 };
 
@@ -171,6 +227,12 @@ struct ParticleSystem {
     double spawnRate; // The rate to spawn the particles
     double spawnTimer; // The timer to spawn the particles
     int maxParticles; // The maximum amount of particles to spawn
+
+    template <class Archive>
+    void serialize(Archive &archive)
+    {
+        archive(CEREAL_NVP(particle), CEREAL_NVP(spawnRate), CEREAL_NVP(spawnTimer), CEREAL_NVP(maxParticles));
+    }
 
 
 };

@@ -36,17 +36,10 @@ class Dungeon {
             return tiles;
         }
 
-        Tile& getTile(int x, int y) {
+        Tile getTile(int x, int y) {
 
-            if (x < 0 || x >= width || y < 0 || y >= height) {
-                return EMPTY_TILE;
-            }
+            return tileSet.getTile(tiles[x + y * width]);
 
-            if (tiles[y * width + x] == -1) {
-                return EMPTY_TILE;
-            }
-
-            return tileSet.getTile(tiles[y * width + x]);
         }
 
         bool rayCast(raylib::Vector2 start, raylib::Vector2 end, float* outDistance = nullptr);
@@ -57,9 +50,5 @@ class Dungeon {
         int* tiles;
         double* opacity;
         TileSet tileSet;
-        Tile EMPTY_TILE {
-            .texture = {},
-            .solid = true
-        };
 
 };

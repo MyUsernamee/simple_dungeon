@@ -1,3 +1,4 @@
+
 #include <raylib-cpp.hpp>
 #include "Game.hpp"
 #include "generators/EmptyDungeonGenerator.hpp"
@@ -5,6 +6,7 @@
 #include "raygui.h"
 #include "Components.hpp"
 #include "Systems.hpp"
+#include "renderers/stats_renderer.hpp"
 
 int main () {
 
@@ -20,6 +22,7 @@ int main () {
 
     Game game = Game();
     game.setSystems(getSystems());
+    game.registerRenderSystem(statsRenderer);
 
     entt::entity dungeonEntity = game.getRegistry().create();
     game.getRegistry().emplace<Dungeon>(dungeonEntity, dungeon);

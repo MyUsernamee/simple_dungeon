@@ -26,9 +26,15 @@ class Game {
         void registerSystem(std::function<void(Game* game, double dt)> system) {
             systems.push_back(system);
         }
+        void registerRenderSystem(std::function<void(Game* game, double dt)> system) {
+            renderSystems.push_back(system);
+        }
         // Used to set the systems in the game
         void setSystems(std::vector<std::function<void(Game* game, double dt)>> systems) {
             this->systems = systems;
+        }
+        void setRenderSystems(std::vector<std::function<void(Game* game, double dt)>> systems) {
+            this->renderSystems = systems;
         }
 
         std::vector<std::function<void(Game* game, double dt)>>& getSystems() {
@@ -58,7 +64,7 @@ class Game {
     private:
 
         std::vector<std::function<void(Game* game, double dt)>> systems;
-        std::vector<std::function<void(const Game* game, double dt)>> renderSystems;
+        std::vector<std::function<void(Game* game, double dt)>> renderSystems;
 
         entt::registry registry;
         raylib::Camera2D camera;

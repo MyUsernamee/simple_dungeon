@@ -1,0 +1,23 @@
+[
+    {
+        "textures": [
+            "assets/tileset/frames/floor_1.png",
+            "assets/tileset/frames/floor_2.png",
+            "assets/tileset/frames/floor_3.png",
+            "assets/tileset/frames/floor_4.png",
+            "assets/tileset/frames/floor_5.png",
+            "assets/tileset/frames/floor_6.png",
+            "assets/tileset/frames/floor_7.png",
+            "assets/tileset/frames/floor_8.png"
+        ],
+        "properties": {}
+    },
+    {
+        "textures": [
+            "assets/tileset/frames/wall_mid.png"
+        ],
+        "properties": {
+            "solid": true
+        }
+    }
+]

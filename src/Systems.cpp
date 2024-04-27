@@ -13,6 +13,7 @@ std::vector<std::function<void(Game*, double)>> getSystems() {
     systems.push_back(projectileSystem);
     systems.push_back(playerSystem);
     systems.push_back(particleSystem);
+    systems.push_back(animationSystem);
 
     return systems;
 }

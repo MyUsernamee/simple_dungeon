@@ -13,7 +13,7 @@ void playerSystem(Game* game, double dt)
 
     auto &registry = game->getRegistry();
 
-    auto view = registry.view<Player, Velocity, Position, SpellCaster, Size>();
+    auto view = registry.view<Player, Velocity, Position, SpellCaster, Size, Animator>();
     bool* player_exists = new bool[4]; // TODO: Make this more efficient and make it a constant / variable
 
     for (int i = 0; i < 4; i++)
@@ -28,9 +28,10 @@ void playerSystem(Game* game, double dt)
         auto &velocity = view.get<Velocity>(entity);
         auto &spellCaster = view.get<SpellCaster>(entity);
         auto &size = view.get<Size>(entity);
+        auto &animator = view.get<Animator>(entity);
 
         // Calculate the center
-        auto center = raylib::Vector2(position.position.x + size.size.x / 2, position.position.y + size.size.y / 2);
+        auto center = raylib::Vector2(position.position.x, position.position.y);
 
         // Get the cursor entity
         auto cursor = registry.get<Player>(entity).cursorEntity;
@@ -56,6 +57,17 @@ void playerSystem(Game* game, double dt)
         {
             spellCaster.addCastDirection(registry, position.position, castDirection);
             SetGamepadVibration(player.gamepad, 0.25 * spellCaster.currentCastDirections.size(), 0.25 * spellCaster.currentCastDirections.size());
+        }
+
+        if (movement.Length() > 0)
+        {
+            animator.currentAnimation = 1;
+            animator.fps = 12;
+        }
+        else
+        {
+            animator.currentAnimation = 0;
+            animator.fps = 4;
         }
 
         player_exists[player.gamepad + 1] = true;

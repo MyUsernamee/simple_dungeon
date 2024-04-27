@@ -1,3 +1,4 @@
+
 #include "TextureCache.hpp"
 
 Texture LoadTextureCached(const std::string &path) {

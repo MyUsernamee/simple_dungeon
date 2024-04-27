@@ -26,8 +26,8 @@ void SpellCaster::cast(Game* game, entt::entity entity, raylib::Vector2 directio
 
     auto spells = game->getSpells();
 
-    auto position = game->getRegistry().get<Position>(entity).position + game->getRegistry().get<Size>(entity).size / 2;
-    position += direction * game->getRegistry().get<Size>(entity).size.x * 2.0;
+    auto position = game->getRegistry().get<Position>(entity).position;
+    position += direction * game->getRegistry().get<Size>(entity).size.y / 2;
 
 
     // We find the matching spells

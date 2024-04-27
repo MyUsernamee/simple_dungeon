@@ -1,12 +1,11 @@
 #include "Game.hpp"
 #include <entt/entt.hpp>
-#include "renderers/SquareRenderer.hpp"
 #include <raylib-cpp.hpp>
 #include "Systems.hpp"
 #include "Components.hpp"
 #include "Constructors.hpp"
-#include "renderers/PlayerRenderer.hpp"
 #include "renderers/SpellCasterRenderer.hpp"
+#define DEBUG
 
 Game::Game()
 {
@@ -80,13 +79,27 @@ void Game::render()
     });
 
     // We then iterate over all entities with a Renderable component
-    auto view = registry.view<Renderable>();
+    auto view = registry.view<Renderable, Position, Size>();
 
     for (auto entity : view) {
 
         auto& Renderable_ = view.get<Renderable>(entity);
+        auto& Position_ = view.get<Position>(entity);
+        auto& Size_ = view.get<Size>(entity);
+
         //TraceLog(LOG_INFO, "Rendering entity with z-index %d", Renderable_.z);
-        Renderable_.renderer->render(registry, entity);
+        DrawTexturePro(
+            Renderable_.texture,
+            raylib::Rectangle{0, 0, Renderable_.texture.width, Renderable_.texture.height},
+            raylib::Rectangle{Position_.position.x - Size_.size.x / 2, Position_.position.y - Size_.size.y / 2, Size_.size.x, Size_.size.y},
+            raylib::Vector2{0, 0},
+            0.0f,
+            Renderable_.color
+        );
+
+        #ifdef DEBUG
+        DrawRectangleLines(Position_.position.x - Size_.size.x / 2, Position_.position.y - Size_.size.y / 2, Size_.size.x, Size_.size.y, raylib::Color(255, 0, 0, 255));
+        #endif
 
     }
 
@@ -95,15 +108,9 @@ void Game::render()
     camera.EndMode();
 
     // Get everyplayer
-    auto new_view = registry.view<Player, Renderable>();
+    for (auto render_system : renderSystems) {
 
-    for (auto entity : new_view) {
-
-        auto& player = new_view.get<Player>(entity);
-        auto& Renderable_ = new_view.get<Renderable>(entity);
-
-        // Convert the renderer to a player renderer
-        dynamic_cast<PlayerRenderer*>(Renderable_.renderer)->statsRenderer(registry, entity);
+        render_system(this, GetFrameTime());
 
     }
 

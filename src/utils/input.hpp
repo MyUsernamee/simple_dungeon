@@ -70,8 +70,8 @@ bool isActionDown(int gamepad, InputAction action) {
 
     if (gamepad == -1) {
 
-        if (action == INTERACT) return IsKeyDown(KEY_E); // TODO: Create a key map / joystick map
-        if (action == ATTACK) return IsMouseButtonDown(MOUSE_LEFT_BUTTON);
+        if (action == INTERACT) return IsKeyPressed(KEY_E); // TODO: Create a key map / joystick map
+        if (action == ATTACK) return IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
 
     }
 
@@ -95,7 +95,7 @@ bool isActionPressed(int gamepad, InputAction action) {
 
     if (gamepad == -1) {
 
-        if (action == INTERACT) return IsKeyDown(KEY_E); // TODO: Create a key map / joystick map
+        if (action == INTERACT) return IsKeyPressed(KEY_E); // TODO: Create a key map / joystick map
         if (action == ATTACK) return IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
 
     }
@@ -120,10 +120,10 @@ CastDirection getCastDirection(int gamepad) {
 
     if (gamepad == -1) {
 
-        if (IsKeyDown(KEY_UP)) return CastDirection::UP; // TODO: Create a key map / joystick map
-        if (IsKeyDown(KEY_DOWN)) return CastDirection::DOWN;
-        if (IsKeyDown(KEY_LEFT)) return CastDirection::LEFT;
-        if (IsKeyDown(KEY_RIGHT)) return CastDirection::RIGHT;
+        if (IsKeyPressed(KEY_UP)) return CastDirection::UP; // TODO: Create a key map / joystick map
+        if (IsKeyPressed(KEY_DOWN)) return CastDirection::DOWN;
+        if (IsKeyPressed(KEY_LEFT)) return CastDirection::LEFT;
+        if (IsKeyPressed(KEY_RIGHT)) return CastDirection::RIGHT;
 
     }
 

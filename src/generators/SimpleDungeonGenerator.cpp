@@ -10,7 +10,7 @@ const int HALLWAY_WIDTH = 2;
 EmptyDungeonGenerator::EmptyDungeonGenerator() {
 
     tileSet = TileSet();
-    tileSet.loadbin("assets/tileset.tileset", 16);
+    tileSet.load("assets/tilesets/tileset.tileset");
     room_templates.push_back(Room("assets/rooms/room.room")); // TODO: Load all rooms from a directory
     room_templates.push_back(Room("assets/rooms/big_room.room"));
 
@@ -99,9 +99,67 @@ Dungeon EmptyDungeonGenerator::generateDungeon(int width, int height) {
 
     // We create rooms
     std::vector<raylib::Vector2> rooms;
-    for (int i = 0; i < 128; i++) { // TODO: Make this generic, remove magic numbers
+    for (int i = 0; i < 64+32; i++) { // TODO: Make this generic, remove magic numbers
         rooms.push_back(raylib::Vector2(GetRandomValue(0, width), GetRandomValue(0, height)));
     }
+
+    // Shift all room so they are not colliding (32 x 32)
+    for (int iteration = 0; iteration < 16; iteration++) {
+
+        SetTargetFPS(2);
+
+        BeginDrawing();
+
+        ClearBackground(RAYWHITE);
+
+        for (int i = 0; i < rooms.size(); i++) {
+            for (int j = 0; j < rooms.size(); j++) {
+                if (i != j) {
+                    Rectangle a = {rooms[i].x - 16, rooms[i].y - 16, 32, 32};
+                    Rectangle b = {rooms[j].x - 16, rooms[j].y - 16, 32, 32};
+
+                    DrawRectangleLinesEx(a, 1, RED);
+
+                    if (CheckCollisionRecs(a, b)) {
+                        auto resolution = GetCollisionRec(a, b);
+
+                        resolution.width *= 2;
+                        resolution.height *= 2;
+
+                        DrawRectangleLinesEx(resolution, 1, GREEN);
+
+                        if (resolution.width < resolution.height) {
+                            
+                            if (rooms[i].x < rooms[j].x) {
+                                rooms[i].x -= resolution.width / 2;
+                                rooms[j].x += resolution.width / 2;
+                            } else {
+                                rooms[i].x += resolution.width / 2;
+                                rooms[j].x -= resolution.width / 2;
+                            }
+
+                        } else {
+                            
+                            if (rooms[i].y < rooms[j].y) {
+                                rooms[i].y -= resolution.height / 2;
+                                rooms[j].y += resolution.height / 2;
+                            } else {
+                                rooms[i].y += resolution.height / 2;
+                                rooms[j].y -= resolution.height / 2;
+                            }
+
+                        }
+
+                    }
+                }
+            }
+        }
+
+        EndDrawing();
+
+    }
+
+    SetTargetFPS(60);
 
     // Add a starting room at the center
     rooms.push_back(raylib::Vector2(width / 2, height / 2));
@@ -216,7 +274,7 @@ Dungeon EmptyDungeonGenerator::generateDungeon(int width, int height) {
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
 
-            if (!tileSet.getTile(tiles[y * width + x]).solid &&
+            if (!tileSet.getTile(tiles[y * width + x]).getBoolProperty("solid") &&
                 y > 0 && y < height - 1 &&
                 tiles[(y - 1) * width + x] == -1 &&
                 tiles[(y - 2) * width + x] == -1) {

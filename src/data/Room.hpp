@@ -35,9 +35,20 @@ class Room {
         int getWidth() { return width; }
         int getHeight() { return height; }
 
+        template <class Archive>
+        void serialize(Archive & archive)   
+        {
+            archive(
+                CEREAL_NVP(tiles),
+                CEREAL_NVP(width),
+                CEREAL_NVP(height)
+            );
+        }
+
     private:
 
         TileSet* tileSet;
+        std::map<std::string, std::string> properties;
         int* tiles;
         int width;
         int height;

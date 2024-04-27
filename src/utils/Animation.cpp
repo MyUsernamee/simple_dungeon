@@ -1,4 +1,5 @@
 #include "Animation.hpp"
+#include "TextureCache.hpp"
 
 Animation::Animation()
 {
@@ -27,7 +28,7 @@ void Animation::load(char* path_pattern)
         char path[256];
         sprintf(path, path_pattern, index);
 
-        Texture2D frame = LoadTexture(path);
+        Texture2D frame = LoadTextureCached(path);
 
         if (frame.id == 0) {
 

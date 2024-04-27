@@ -13,7 +13,7 @@ void spellCasterRenderer(entt::registry &registry)
         auto &position = view.get<Position>(entity);
         auto &size = view.get<Size>(entity);
 
-        raylib::Vector2 direction_center = raylib::Vector2{position.position.x + size.size.x / 2, position.position.y + size.size.y / 2 + 10};
+        raylib::Vector2 direction_center = raylib::Vector2{position.position.x, position.position.y + size.size.y / 2 + 10}; // TODO: remove magic numbers
 
         int width = spellCaster.currentCastDirections.size() * 12;
 
@@ -22,7 +22,7 @@ void spellCasterRenderer(entt::registry &registry)
             CastDirection direction = spellCaster.currentCastDirections[i];
             Texture texture = castDirectionToTexture(direction);
 
-            raylib::Vector2 direction_position = raylib::Vector2{direction_center.x - width / 2 + i * 12, direction_center.y}; // TODO: remove magic numbers
+            raylib::Vector2 direction_position = raylib::Vector2{direction_center.x + i * 12 - width / 2, direction_center.y}; // TODO: remove magic numbers
         
             DrawTexture(texture, direction_position.x, direction_position.y, raylib::Color{255, 255, 255, 255});
         }
