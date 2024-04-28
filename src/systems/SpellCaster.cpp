@@ -33,7 +33,7 @@ void SpellCaster::cast(Game* game, entt::entity entity, raylib::Vector2 directio
     // We find the matching spells
     for (auto spell : spells) {
 
-        if (spell.castDirections == currentCastDirections) {
+        if (spell.castDirections == currentCastDirections && mana >= spell.manaCost) {
 
             // Create a new projectile that copies the spell's projectile
             auto proj = createProjectile(
@@ -44,8 +44,10 @@ void SpellCaster::cast(Game* game, entt::entity entity, raylib::Vector2 directio
                 spell.projectile.damage
             );
 
+            mana -= spell.manaCost;
+
             auto& projectile = game->getRegistry().get<Projectile>(proj);
-            projectile.onHit = castFireball;
+            projectile.onHit = spell.castFunction;
             currentCastDirections.clear();
             return;
 

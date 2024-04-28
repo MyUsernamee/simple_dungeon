@@ -23,3 +23,5 @@ template <typename Archive>
 void serialize(Archive &archive, raylib::Vector2& vector) {
     archive(CEREAL_NVP(vector.x), CEREAL_NVP(vector.y));
 }
+
+int operator<(const raylib::Vector2& lhs, const raylib::Vector2& rhs);

@@ -15,3 +15,13 @@
 double GetRandomValue(double min, double max) {
     return min + (static_cast<float>(GetRandomValue(0, std::numeric_limits<int>::max())) / static_cast<float>(std::numeric_limits<int>::max())) * (max - min);
 }
+
+int operator<(const raylib::Vector2& lhs, const raylib::Vector2& rhs) {
+    if (lhs.x < rhs.x) {
+        return true;
+    } else if (lhs.x == rhs.x) {
+        return lhs.y < rhs.y;
+    } else {
+        return false;
+    }
+}

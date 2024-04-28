@@ -18,8 +18,8 @@ entt::entity createPlayer(entt::registry &registry, raylib::Color color, int gam
         available_position = registry.get<Position>(entity).position;
     }
 
-    auto idleAnimation = Animation("assets/0x72_DungeonTilesetII_v1.7/frames/skelet_idle_anim_f%d.png");
-    auto runAnimation = Animation("assets/0x72_DungeonTilesetII_v1.7/frames/skelet_run_anim_f%d.png");
+    auto idleAnimation = Animation("assets/tileset/frames/skelet_idle_anim_f%d.png");
+    auto runAnimation = Animation("assets/tileset/frames/skelet_run_anim_f%d.png");
 
     auto animations = std::vector<Animation>{idleAnimation, runAnimation};
 
@@ -34,6 +34,7 @@ entt::entity createPlayer(entt::registry &registry, raylib::Color color, int gam
     registry.emplace<Team>(player, 0b01);
     registry.emplace<SpellCaster>(player, std::vector<CastDirection>());
     registry.emplace<Animator>(player, animations, 0, 0.1f);
+    registry.emplace<Light>(player, 64);
 
     auto cursor = registry.create();
     registry.emplace<Position>(cursor, position);

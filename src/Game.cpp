@@ -57,15 +57,15 @@ void Game::render()
     camera.BeginMode();
 
 
-    std::vector<raylib::Vector2> visibility_points;
+    std::vector<std::pair<raylib::Vector2, double>> visibility_points;
 
-    // We get all players
-    auto _view = registry.view<Player, Position>();
+    // We get all lights
+    auto _view = registry.view<Light, Position>();
 
     for (auto entity : _view) {
 
         auto& position = _view.get<Position>(entity);
-        visibility_points.push_back(position.position);
+        visibility_points.push_back({position.position, _view.get<Light>(entity).radius});
 
     }
 

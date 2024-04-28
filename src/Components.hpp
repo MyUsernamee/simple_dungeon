@@ -146,15 +146,6 @@ struct Health {
 
 };
 
-struct Mana {
-
-    Mana(int mana, int maxMana) : mana(mana), maxMana(maxMana) {}
-
-    int mana;
-    int maxMana;
-
-};
-
 // TODO: Merge SpellCaster and Mana
 /**
  * @brief Adds the ability to cast spells to a object.
@@ -162,6 +153,8 @@ struct Mana {
 struct SpellCaster {
 
     std::vector<CastDirection> currentCastDirections; // The current cast directions for the spell
+    double mana = 100; // The mana of the spell caster
+    double maxMana = 100; // The maximum mana of the spell caster
 
     /**
      * @brief Adds a cast direction to the current cast directions and spawns particles.
@@ -243,5 +236,11 @@ struct ParticleSystem {
 struct DungeonOcclusion {
 
     
+
+};
+
+struct Light {
+
+    int radius;
 
 };

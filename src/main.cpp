@@ -1,12 +1,12 @@
 
 #include <raylib-cpp.hpp>
 #include "Game.hpp"
-#include "generators/EmptyDungeonGenerator.hpp"
 #define RAYGUI_IMPLEMENTATION
 #include "raygui.h"
 #include "Components.hpp"
 #include "Systems.hpp"
 #include "renderers/stats_renderer.hpp"
+#include "generators/SimpleDungeonGenerator.hpp"
 
 int main () {
 
@@ -17,16 +17,12 @@ int main () {
     SetTargetFPS(GetMonitorRefreshRate(0));
     SetWindowMonitor(0);
 
-    EmptyDungeonGenerator generator = EmptyDungeonGenerator();
-    Dungeon dungeon = generator.generateDungeon(256, 256);
 
     Game game = Game();
     game.setSystems(getSystems());
     game.registerRenderSystem(statsRenderer);
 
-    entt::entity dungeonEntity = game.getRegistry().create();
-    game.getRegistry().emplace<Dungeon>(dungeonEntity, dungeon);
-    
+    generateDungeon(&game, 512, 512);
 
     while (!w.ShouldClose()) {
 

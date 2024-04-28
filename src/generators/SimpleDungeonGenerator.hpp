@@ -3,4 +3,6 @@
 
 #pragma once
 
-Dungeon generateDungeon(int width, int height);
+class Game; // Forward declaration
+
+void generateDungeon(Game* game, int width, int height);

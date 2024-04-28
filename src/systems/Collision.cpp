@@ -121,7 +121,7 @@ void collisionSystem(Game* game, double dt)
                     continue;
                 }
 
-                if (currentDungeon.getTile(x, y).getBoolProperty("solid")) {
+                if (currentDungeon.getTile(x, y).getBoolProperty("solid") || currentDungeon.getTile(x, y).textures.size() == 0) {
 
                     raylib::Rectangle tileRect = raylib::Rectangle(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
 

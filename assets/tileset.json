@@ -17,7 +17,15 @@
             "assets/tileset/frames/wall_mid.png"
         ],
         "properties": {
-            "solid": true
+            "solid": "true"
+        }
+    },
+    {
+        "textures": [
+            "assets/tileset/frames/floor_stairs.png"
+        ],
+        "properties": {
+            "ext": "true"
         }
     }
 ]

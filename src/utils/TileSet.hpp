@@ -14,6 +14,7 @@ struct Tile {
 
     std::vector<Texture2D> textures = {};
     std::map<std::string, std::string> properties = {}; // Properties of the tile.
+    int currentTexture = 0;
     // Why a map of strings instead of just adding the properties to the struct?
     // This way, we can add properties to the tile without changing the struct.
     // As such when we want to add new properties to the tile, we don't need to remake all of our tilesets.
@@ -65,8 +66,10 @@ struct Tile {
                 for (nlohmann::json::iterator it2 = it.value().begin(); it2 != it.value().end(); ++it2) {
                     textures.push_back(LoadTexture(it2.value().get<std::string>().c_str()));
                 }
-            } else {
-                properties[it.key()] = it.value().get<std::string>();
+            } else if (it.key() == "properties") {
+                for (nlohmann::json::iterator it2 = it.value().begin(); it2 != it.value().end(); ++it2) {
+                    properties[it2.key()] = it2.value().get<std::string>();
+                }
             }
         }
     }
@@ -161,6 +164,8 @@ class TileSet {
                 CEREAL_NVP(tiles)
             );
         }
+
+        // TODO: Switch to a map for faster lookups and code that is easier to read. PLEASE!
 
     private:
 

@@ -61,7 +61,7 @@ class Game {
 
         }
 
-    private:
+    protected: // Protected so that children that are used for testing can access them
 
         std::vector<std::function<void(Game* game, double dt)>> systems;
         std::vector<std::function<void(Game* game, double dt)>> renderSystems;

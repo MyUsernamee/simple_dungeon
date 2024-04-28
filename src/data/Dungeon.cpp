@@ -35,7 +35,7 @@ Dungeon::~Dungeon()
 
 }
 
-void Dungeon::render(raylib::Camera2D camera, std::vector<raylib::Vector2> visiblity_points)
+void Dungeon::render(raylib::Camera2D camera, std::vector<std::pair<raylib::Vector2, double>> visiblity_points)
 {
 
     int start_x = ((int)camera.target.x - (int)camera.offset.x) / TILE_SIZE;
@@ -50,33 +50,29 @@ void Dungeon::render(raylib::Camera2D camera, std::vector<raylib::Vector2> visib
             if (x < 0 || x >= width || y < 0 || y >= height) continue; // TODO: Make this use a clamp function instead of if statements
             if (tiles[y * width + x] == -1) continue;
 
-            bool visible = false;
+            double visibility = 0.0;
             for (int i = 0; i < visiblity_points.size(); i++) {
-                if (!rayCast(raylib::Vector2(x * TILE_SIZE, y * TILE_SIZE), visiblity_points[i], nullptr)) {
+                float distance = visiblity_points[i].first.Distance(raylib::Vector2(x * TILE_SIZE, y * TILE_SIZE)) / TILE_SIZE;
 
-                    visible = true;
-                    break;
+                if (distance > visiblity_points[i].second) continue;
+
+                if (!rayCast(raylib::Vector2(x * TILE_SIZE, y * TILE_SIZE), visiblity_points[i].first, nullptr)) {
+
+                    visibility = std::max(visibility, visiblity_points[i].second / pow(distance, 2.0));
+                    
 
                 }   
             }
 
-            if (visible) {
 
-                opacity[y * width + x] = std::min(1.0, opacity[y * width + x] + GetFrameTime() * 2.0);
-
-            }
-            else {
-
-                opacity[y * width + x] = std::max(0.0, opacity[y * width + x] - GetFrameTime());
-
-            }
-
-            
+            visibility = std::clamp(visibility, 0.2, 1.0);
+            opacity[y * width + x] += (visibility - opacity[y * width + x]) * 0.1;
 
             Tile tile = tileSet.getTile(tiles[y * width + x]);
 
-            //DrawTextureEx(tile.texture, {(float)x * TILE_SIZE, (float)y * TILE_SIZE}, 0, TILE_SIZE / tile.texture.width, raylib::Color{255, 255, 255, (unsigned char)(opacity[y * width + x] * 255)});
+            Texture2D texture = tile.textures[tile.currentTexture];
 
+            DrawTextureEx(texture, {(float)x * TILE_SIZE, (float)y * TILE_SIZE}, 0, TILE_SIZE / texture.width, {255, 255, 255, static_cast<unsigned char>(255 * opacity[y * width + x])});
         }
 
     }
