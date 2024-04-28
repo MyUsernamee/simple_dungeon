@@ -6,6 +6,7 @@ TODO: Add particles and particle systems.
 TODO: Fix Animations.
 TODO: Add Animations to enemeys / ai.
 TODO: Fix UI.
+    NOTE: I kind of want to bring the old ui back, or maybe do a redesign / mock up.
 TODO: Add mana upgrades or wand system.
 TODO: Implement getting to the next floor.
 TODO: Implement room generation or make rooms more extesible so each room can have a purpose.
