@@ -43,7 +43,8 @@ class Dungeon {
         }
 
         bool rayCast(raylib::Vector2 start, raylib::Vector2 end, float* outDistance = nullptr);
-        std::vector<raylib::Vector2> pathFind(raylib::Vector2 start, raylib::Vector2 end);
+        std::vector<raylib::Vector2> pathFind(raylib::Vector2 start, raylib::Vector2 end, std::function<double(raylib::Vector2, raylib::Vector2, int)> heuristic);
+        // TODO: Make a better pathfinding system.
 
         int width;
         int height;

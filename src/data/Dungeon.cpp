@@ -108,7 +108,7 @@ double heuristic(raylib::Vector2 a, raylib::Vector2 b, int tile)
     return a.Distance(b) + (tile == 1 ? 10000000 : 0);
 }
 
-std::vector<raylib::Vector2> Dungeon::pathFind(raylib::Vector2 start, raylib::Vector2 end)
+std::vector<raylib::Vector2> Dungeon::pathFind(raylib::Vector2 start, raylib::Vector2 end, std::function<double(raylib::Vector2, raylib::Vector2, int)> h = &heuristic)
 {
 
     start = start / TILE_SIZE;
@@ -124,7 +124,7 @@ std::vector<raylib::Vector2> Dungeon::pathFind(raylib::Vector2 start, raylib::Ve
         map[i] = tileSet.getTile(tiles[i]).getBoolProperty("solid") ? 1 : 0;
     }
 
-    std::vector<raylib::Vector2> path = findPath(start, end, map, width, height, heuristic);
+    std::vector<raylib::Vector2> path = findPath(start, end, map, width, height, h);
 
     // Multiply by TILE_SIZE
     for (int i = 0; i < path.size(); i++) {

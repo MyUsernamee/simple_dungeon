@@ -13,6 +13,7 @@
 
 #include <optional>
 #include <functional>
+#include "ai/AiBrain.hpp"
 
 /*
 
@@ -146,7 +147,6 @@ struct Health {
 
 };
 
-// TODO: Merge SpellCaster and Mana
 /**
  * @brief Adds the ability to cast spells to a object.
 */
@@ -169,23 +169,24 @@ struct SpellCaster {
 
 struct AI {
 
-    double speed;
-    raylib::Vector2 movement;
+    double speed = 1;
+    int meleeDamage = 1;
+    void updateTarget(raylib::Vector2 target); // Update the target of the AI (function because we pathfind when this is updated)
+    raylib::Vector2 getTarget(); // Get the target of the AI
+    std::vector<raylib::Vector2> path;
+    bool updatePath = true;
+
+    AiBrain* brain; // Controls the behavior of the AI
+
+private:
+
+    raylib::Vector2 target;
 
 };
 
 struct Team {
 
     int teamBitMask; // Bitmask for team If these are & together and they are not 0 then they are on the same team. and should not attack each other.
-
-};
-
-struct MeleeEnemy {
-
-    int attackSpeed;
-    int attackTimer;
-    double range;
-    int damage;
 
 };
 
