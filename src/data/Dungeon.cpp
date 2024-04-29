@@ -102,13 +102,18 @@ bool Dungeon::rayCast(raylib::Vector2 start, raylib::Vector2 end, float *outDist
 
 }
 
-double heuristic(raylib::Vector2 a, raylib::Vector2 b, int tile)
+double h(raylib::Vector2 a, raylib::Vector2 b)
 {
-    // Max if the tile is solid
-    return a.Distance(b) + (tile == 1 ? 10000000 : 0);
-}
+    return a.Distance(b) + GetRandomValue(0, 100) / 25.0;
+}// Define directions for 4 possible neighbors (assuming 8-direction movement)
+const std::vector<raylib::Vector2> directions = {
+    raylib::Vector2{0, -1}, // Up
+    raylib::Vector2{1, 0},  // Right
+    raylib::Vector2{0, 1},  // Down
+    raylib::Vector2{-1, 0}  // Left
+};
 
-std::vector<raylib::Vector2> Dungeon::pathFind(raylib::Vector2 start, raylib::Vector2 end, std::function<double(raylib::Vector2, raylib::Vector2, int)> h = &heuristic)
+std::vector<raylib::Vector2> Dungeon::pathFind(raylib::Vector2 start, raylib::Vector2 end)
 {
 
     start = start / TILE_SIZE;
@@ -118,20 +123,96 @@ std::vector<raylib::Vector2> Dungeon::pathFind(raylib::Vector2 start, raylib::Ve
     if (end.x < 0 || end.x >= width || end.y < 0 || end.y >= height) return {};
     if (tileSet.getTile(tiles[(int)start.y * width + (int)start.x]).getBoolProperty("solid")) return {};
     if (tileSet.getTile(tiles[(int)end.y * width + (int)end.x]).getBoolProperty("solid")) return {};
-    
-    int* map = new int[width * height];
-    for (int i = 0; i < width * height; i++) {
-        map[i] = tileSet.getTile(tiles[i]).getBoolProperty("solid") ? 1 : 0;
-    }
 
-    std::vector<raylib::Vector2> path = findPath(start, end, map, width, height, h);
+    
+    // We floor the start and end points to get the cell position
+    start.x = floor(start.x);
+    start.y = floor(start.y);
+    end.x = floor(end.x);
+    end.y = floor(end.y);
+    
+    
+    std::vector<raylib::Vector2> open_set;
+    std::unordered_map<raylib::Vector2, raylib::Vector2> cameFrom;
+
+    std::unordered_map<raylib::Vector2, double> gScore;
+    open_set.push_back(start);
+    gScore[start] = h(start, end);
+
+    // Check if the start and end points are in the map bounds
+    if (start.x < 0 || start.x >= width || start.y < 0 || start.y >= height) {
+        return std::vector<raylib::Vector2>(); // No path found
+    }
+    if (end.x < 0 || end.x >= width || end.y < 0 || end.y >= height) {
+        return std::vector<raylib::Vector2>(); // No path found
+    }
+    std::vector<raylib::Vector2> path;
+
+    while (!open_set.empty()) {
+        raylib::Vector2 current;
+        double lowest = std::numeric_limits<double>::max();
+
+        // Find the cell in open_set with the lowest gScore
+        for (auto& node : open_set) {
+            if (gScore[node] < lowest) {
+                lowest = gScore[node];
+                current = node;
+            }
+        }
+
+        if (current == end) {
+            // Reconstruct the path from end to start
+            while (current != start) {
+                path.push_back(current + raylib::Vector2(0.5, 0.5)); // Add 0.5 to get the center of the cell
+                current = cameFrom[current]; // Add 0.5 to get the center of the cell
+            }
+            path.push_back(start + raylib::Vector2(0.5, 0.5)); // Add 0.5 to get the center of the cell
+            std::reverse(path.begin(), path.end()); // Reverse path to start -> end order
+            
+            break;
+        }
+
+        open_set.erase(std::remove(open_set.begin(), open_set.end(), current), open_set.end());
+
+        // Explore neighbors (8-direction movement)
+        for (const auto& direction : directions) {
+            raylib::Vector2 neighbor = current + direction;
+            if (neighbor.x < 0 || neighbor.x >= width || neighbor.y < 0 || neighbor.y >= height) {
+                continue; // Skip out-of-bounds neighbors
+            }
+            if (getTile(neighbor.x, neighbor.y).getBoolProperty("solid") || getTile(neighbor.x, neighbor.y).textures.size() == 0) {
+                continue; // Skip solid neighbors
+            }
+
+            if (gScore.find(current) == gScore.end()) {
+                gScore[current] = std::numeric_limits<double>::max(); // Initialize to infinity
+            }
+
+            double tentative_gScore = h(current, neighbor) + gScore[current];
+
+            if (gScore.find(neighbor) == gScore.end()) {
+                gScore[neighbor] = std::numeric_limits<double>::max(); // Initialize to infinity
+            }
+
+            // Breakpoint if gScore[neighbor] is 0      
+            // TraceLog(LOG_INFO, "gScore[%d]: %f", (int)neighbor.y * width + (int)neighbor.x, gScore[neighbor]);
+
+            if (tentative_gScore < gScore[neighbor]) {
+                cameFrom[neighbor] = current;
+                gScore[neighbor] = tentative_gScore;
+                
+                if (std::find(open_set.begin(), open_set.end(), neighbor) == open_set.end()) {
+                    open_set.push_back(neighbor);
+                }
+
+            }
+        }
+    }
 
     // Multiply by TILE_SIZE
     for (int i = 0; i < path.size(); i++) {
         path[i] *= TILE_SIZE;
     } // TODO: Make this not scale by TILE_SIZE
-
-    delete[] map;
 
     return path;
 }
