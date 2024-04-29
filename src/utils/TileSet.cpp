@@ -78,7 +78,7 @@ Tile TileSet::getTile(int index)
 {
     
     if (index < 0 || index >= tiles.size()) {
-        return Tile();
+        return Tile{};
     }
 
     return tiles[index];

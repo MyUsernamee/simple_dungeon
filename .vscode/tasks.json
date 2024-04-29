@@ -1,0 +1,13 @@
+{
+    "version":"2.0.0",
+    "tasks":[
+        {
+            "label":"game",
+            "type":"cProfile",
+            "program": "${workspaceFolder}/build/raylib_project",
+            "args": [],
+            "outputFile": "${workspaceFolder}/build/game.prof",
+            
+        }
+    ]
+}

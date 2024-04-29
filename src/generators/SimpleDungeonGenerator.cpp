@@ -11,6 +11,7 @@
 #include <utils/AStar.hpp>
 
 #include <utils/utils.hpp>
+#include <entities/DungeonSpider/constructor.hpp>
 
 const int HALLWAY_WIDTH = 4;
 
@@ -216,6 +217,10 @@ void generateDungeon(Game* game, int width, int height) {
         entt::entity light_entity = game->getRegistry().create();
         game->getRegistry().emplace<Light>(light_entity, 32);
         game->getRegistry().emplace<Position>(light_entity, center * TILE_SIZE);
+
+        // Create a dungeon spider in the room
+        entt::entity spider_entity = createDungeonSpider(game->getRegistry(), center * TILE_SIZE);
+
     }
 
 }

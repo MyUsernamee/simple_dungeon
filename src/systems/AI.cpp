@@ -2,7 +2,7 @@
 #include "Components.hpp"
 #include "Game.hpp"
 
-double heuristic(raylib::Vector2 a, raylib::Vector2 b, int type)
+double distance_heuristic(raylib::Vector2 a, raylib::Vector2 b, int type)
 {
     return a.Distance(b);
 }
@@ -19,13 +19,15 @@ void aiSystem(Game* game, double dt)
         auto &ai = view.get<AI>(entity);
         auto &velocity = view.get<Velocity>(entity);
 
+        ai.brain->update(game, entity);
+
         if (ai.updatePath)
         {
             // Update path
             ai.updatePath = false;
 
             // Pathfind
-            ai.path = game->getDungeon().pathFind(registry.get<Position>(entity).position, ai.getTarget(), heuristic);
+            ai.path = game->getDungeon().pathFind(registry.get<Position>(entity).position, ai.getTarget());
         }
 
         // Get the next position
@@ -44,6 +46,8 @@ void aiSystem(Game* game, double dt)
                 ai.path.erase(ai.path.begin());
             }
         }
+        else
+            velocity.velocity *= 0;
 
     }
 
@@ -55,4 +59,9 @@ void AI::updateTarget(raylib::Vector2 target)
     this->target = target;
     this->updatePath = true;
 
+}
+
+raylib::Vector2 AI::getTarget()
+{
+    return target;
 }

@@ -169,12 +169,12 @@ struct SpellCaster {
 
 struct AI {
 
-    double speed = 1;
+    double speed = 10;
     int meleeDamage = 1;
     void updateTarget(raylib::Vector2 target); // Update the target of the AI (function because we pathfind when this is updated)
     raylib::Vector2 getTarget(); // Get the target of the AI
     std::vector<raylib::Vector2> path;
-    bool updatePath = true;
+    bool updatePath = false;
 
     AiBrain* brain; // Controls the behavior of the AI
 
