@@ -10,6 +10,8 @@ void DungeonSpider::update(Game *game, entt::entity entity)
     auto &position = registry.get<Position>(entity);
     auto &velocity = registry.get<Velocity>(entity);
     auto &ai = registry.get<AI>(entity);
+    auto &animator = registry.get<Animator>(entity);
+    auto &renderable = registry.get<Renderable>(entity);
 
     auto &dungeon = game->getDungeon();
 
@@ -17,7 +19,9 @@ void DungeonSpider::update(Game *game, entt::entity entity)
     {
     case State::IDLE:
         //ai.updateTarget(position.position);
-        if (GetRandomValue(0, 100) < 1)
+        animator.currentAnimation = 0;
+        animator.fps = 4;
+        if (GetRandomValue(0, 1000) < 1)
         {
             state = State::WALKING;
 
@@ -36,6 +40,9 @@ void DungeonSpider::update(Game *game, entt::entity entity)
         break;
     case State::WALKING:
 
+        animator.currentAnimation = 1;
+        animator.fps = 12;
+        renderable.flipX = velocity.velocity.x < 0;
         if (ai.path.size() == 0)
         {
             state = State::IDLE;

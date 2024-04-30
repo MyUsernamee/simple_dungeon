@@ -13,7 +13,7 @@ void playerSystem(Game* game, double dt)
 
     auto &registry = game->getRegistry();
 
-    auto view = registry.view<Player, Velocity, Position, SpellCaster, Size, Animator>();
+    auto view = registry.view<Player, Velocity, Position, SpellCaster, Size, Animator, Renderable>();
     bool* player_exists = new bool[4]; // TODO: Make this more efficient and make it a constant / variable
 
     for (int i = 0; i < 4; i++)
@@ -29,6 +29,7 @@ void playerSystem(Game* game, double dt)
         auto &spellCaster = view.get<SpellCaster>(entity);
         auto &size = view.get<Size>(entity);
         auto &animator = view.get<Animator>(entity);
+        auto &renderable = view.get<Renderable>(entity);
 
         // Calculate the center
         auto center = raylib::Vector2(position.position.x, position.position.y);
@@ -68,6 +69,15 @@ void playerSystem(Game* game, double dt)
         {
             animator.currentAnimation = 0;
             animator.fps = 4;
+        }
+
+        if (movement.x < 0)
+        {
+            renderable.flipX = true;
+        }
+        else
+        {
+            renderable.flipX = false;
         }
 
         player_exists[player.gamepad + 1] = true;

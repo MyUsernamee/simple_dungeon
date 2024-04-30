@@ -5,7 +5,7 @@
 #include "Components.hpp"
 #include "Constructors.hpp"
 #include "renderers/SpellCasterRenderer.hpp"
-#define DEBUG
+//#define DEBUG
 
 Game::Game()
 {
@@ -87,10 +87,17 @@ void Game::render()
         auto& Position_ = view.get<Position>(entity);
         auto& Size_ = view.get<Size>(entity);
 
+        // Check if the entity is visible
+        raylib::Vector2 screen_position = camera.GetWorldToScreen(Position_.position);
+        if (screen_position.x < 0 || screen_position.x > GetRenderWidth() || screen_position.y < 0 || screen_position.y > GetRenderHeight()) continue;
+
+        int flip_x_multiplier = Renderable_.flipX ? -1 : 1;
+        int flip_y_multiplier = Renderable_.flipY ? -1 : 1;
+
         //TraceLog(LOG_INFO, "Rendering entity with z-index %d", Renderable_.z);
         DrawTexturePro(
             Renderable_.texture,
-            raylib::Rectangle{0, 0, Renderable_.texture.width, Renderable_.texture.height},
+            raylib::Rectangle{0, 0, Renderable_.texture.width * flip_x_multiplier, Renderable_.texture.height * flip_y_multiplier},
             raylib::Rectangle{Position_.position.x - Size_.size.x / 2, Position_.position.y - Size_.size.y / 2, Size_.size.x, Size_.size.y},
             raylib::Vector2{0, 0},
             0.0f,

@@ -37,11 +37,11 @@ void aiSystem(Game* game, double dt)
 
             // Move towards the next position
             raylib::Vector2 direction = nextPosition - registry.get<Position>(entity).position;
-            direction.Normalize();
+            direction = direction.Normalize();
             velocity.velocity = direction * ai.speed;
 
             // Check if we are at the next position
-            if (registry.get<Position>(entity).position.Distance(nextPosition) < TILE_SIZE)
+            if (registry.get<Position>(entity).position.Distance(nextPosition) < 5) // TODO: Remove magic number
             {
                 ai.path.erase(ai.path.begin());
             }

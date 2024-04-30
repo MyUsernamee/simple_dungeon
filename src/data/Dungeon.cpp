@@ -214,5 +214,15 @@ std::vector<raylib::Vector2> Dungeon::pathFind(raylib::Vector2 start, raylib::Ve
         path[i] *= TILE_SIZE;
     } // TODO: Make this not scale by TILE_SIZE
 
+    // Now we remove points that can directly see each other
+    for (int i = 0; i < path.size(); i++) {
+        if (i + 2 < path.size()) {
+            if (!rayCast(path[i], path[i + 2], nullptr)) {
+                path.erase(path.begin() + i + 1);
+                i--;
+            }
+        }
+    }
+
     return path;
 }

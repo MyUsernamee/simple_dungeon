@@ -29,6 +29,8 @@ struct Renderable {
     raylib::Color color;
     int z = 0;
     int opacity = 255;
+    bool flipX = false;
+    bool flipY = false;
 
     template <class Archive>
     void save(Archive &archive) const
@@ -169,7 +171,7 @@ struct SpellCaster {
 
 struct AI {
 
-    double speed = 10;
+    double speed = 100;
     int meleeDamage = 1;
     void updateTarget(raylib::Vector2 target); // Update the target of the AI (function because we pathfind when this is updated)
     raylib::Vector2 getTarget(); // Get the target of the AI

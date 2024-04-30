@@ -23,6 +23,11 @@ void Animation::load(char* path_pattern)
     int index = 0;
     bool loaded = true;
 
+    // If the animation starts at 1 instead of 0
+    if (!FileExists(TextFormat(path_pattern, 0)) && FileExists(TextFormat(path_pattern, 1))) {
+        index = 1;
+    }
+
     while (loaded) {
 
         char path[256];

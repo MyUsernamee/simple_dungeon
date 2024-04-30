@@ -184,7 +184,7 @@ void generateDungeon(Game* game, int width, int height) {
     // First we create a list of points
     std::vector<raylib::Vector2> room_centers;
     for (int i = 0; i < 64; i++) {
-        room_centers.push_back(raylib::Vector2(rand() % width, rand() % height));
+        room_centers.push_back(raylib::Vector2(GetRandomValue(0, width), GetRandomValue(0, height)));
     }
 
     // TODO: Load Rooms from files and do collision resolution.
@@ -214,9 +214,9 @@ void generateDungeon(Game* game, int width, int height) {
 
     // Add lights to every room
     for (const auto& center : room_centers) {
-        entt::entity light_entity = game->getRegistry().create();
-        game->getRegistry().emplace<Light>(light_entity, 32);
-        game->getRegistry().emplace<Position>(light_entity, center * TILE_SIZE);
+        // entt::entity light_entity = game->getRegistry().create();
+        // game->getRegistry().emplace<Light>(light_entity, 32);
+        // game->getRegistry().emplace<Position>(light_entity, center * TILE_SIZE);
 
         // Create a dungeon spider in the room
         entt::entity spider_entity = createDungeonSpider(game->getRegistry(), center * TILE_SIZE);
