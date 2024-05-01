@@ -13,6 +13,7 @@ void castFireball(Game* game, entt::entity proj, entt::entity other)
     registry.emplace<Velocity>(entity, raylib::Vector2{0, 0});
     registry.emplace<Renderable>(entity, LoadTextureCached("assets/fireball.png"), raylib::Color{255, 255, 255, 255});
     registry.emplace<Size>(entity, raylib::Vector2{16, 16});
+    registry.emplace<Light>(entity, 32, raylib::Color{255, 125, 0, 255});
     //registry.emplace<Collision>(entity, 0b10);
 
 }

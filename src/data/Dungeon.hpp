@@ -1,4 +1,5 @@
 #include "utils/TileSet.hpp"
+#include "Components.hpp"
 
 #pragma once
 
@@ -19,7 +20,10 @@ class Dungeon {
         /**
          * @brief Render the dungeon.
         */
-        void render(raylib::Camera2D camera, std::vector<std::pair<raylib::Vector2, double>> visiblity_points);
+        void render(raylib::Camera2D camera);
+
+        // Renders a lighting texture
+        void renderLighting(raylib::Camera2D camera, std::vector<std::pair<raylib::Vector2, Light>> visiblity_points);
 
         // TOOD: Add getters and setters for everything.
         TileSet getTileSet() {

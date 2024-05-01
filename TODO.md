@@ -12,7 +12,12 @@ TODO: Fix UI.
 TODO: Add mana upgrades or wand system.
 TODO: Implement getting to the next floor.
 TODO: Implement room generation or make rooms more extesible so each room can have a purpose.
-TODO: Reorganize and make a entities folder.
-TODO: Implement extensible AI
+TODO: FIX LIGHTING SYSTEM.
+TODO: Add blood experience and upgrade system.
+TODO: Add health visualization
+    Note: Red flashes indicated how dead.
+TODO: Fix Ui.
+TODO: Reorganize and make a entities folder. DONE!
+TODO: Implement extensible AI DONE!
     NOTE: I am thinking of creating a component that has a pointer to an extensible class that handles ai.
     NOTE: I might want to use LUA. But that is a lot to implement so probably not.

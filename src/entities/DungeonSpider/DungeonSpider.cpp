@@ -27,11 +27,13 @@ void DungeonSpider::update(Game *game, entt::entity entity)
 
             raylib::Vector2 grid_position = raylib::Vector2{static_cast<int>(position.position.x / TILE_SIZE), static_cast<int>(position.position.y / TILE_SIZE)};
 
-            raylib::Vector2 newPosition = raylib::Vector2{GetRandomValue(0, dungeon.getWidth()), GetRandomValue(0, dungeon.getHeight())};
+            raylib::Vector2 newPosition = raylib::Vector2{GetRandomValue(-128, 128), GetRandomValue(-128, 128)};
+            newPosition += position.position / TILE_SIZE;
 
             while (dungeon.getTile(newPosition.x, newPosition.y).getBoolProperty("solid") || dungeon.getTile(newPosition.x, newPosition.y).textures.size() == 0)
             {
-                newPosition = raylib::Vector2{GetRandomValue(0, dungeon.getWidth()), GetRandomValue(0, dungeon.getHeight())};
+                newPosition = raylib::Vector2{GetRandomValue(-128, 128), GetRandomValue(-128, 128)};
+                newPosition += position.position / TILE_SIZE;
             }
 
             ai.updateTarget(newPosition * TILE_SIZE);

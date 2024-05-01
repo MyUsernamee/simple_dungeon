@@ -1,6 +1,7 @@
 #include "data/Dungeon.hpp"
 #include <algorithm>
 #include "utils/AStar.hpp"
+#include <Components.hpp>
 
 Dungeon::Dungeon(int width, int height, int *tiles, TileSet tileSet)
 {
@@ -35,7 +36,7 @@ Dungeon::~Dungeon()
 
 }
 
-void Dungeon::render(raylib::Camera2D camera, std::vector<std::pair<raylib::Vector2, double>> visiblity_points)
+void Dungeon::renderLighting(raylib::Camera2D camera, std::vector<std::pair<raylib::Vector2, Light>> visiblity_points)
 {
 
     int start_x = ((int)camera.target.x - (int)camera.offset.x) / TILE_SIZE;
@@ -50,29 +51,27 @@ void Dungeon::render(raylib::Camera2D camera, std::vector<std::pair<raylib::Vect
             if (x < 0 || x >= width || y < 0 || y >= height) continue; // TODO: Make this use a clamp function instead of if statements
             if (tiles[y * width + x] == -1) continue;
 
-            double visibility = 0.0;
+            raylib::Vector3 color = {0, 0, 0};
             for (int i = 0; i < visiblity_points.size(); i++) {
-                float distance = visiblity_points[i].first.Distance(raylib::Vector2(x * TILE_SIZE, y * TILE_SIZE)) / TILE_SIZE;
+                float distance = visiblity_points[i].first.Distance(raylib::Vector2(x * TILE_SIZE + TILE_SIZE / 2, y * TILE_SIZE + TILE_SIZE / 2)) / TILE_SIZE;
 
-                if (distance > visiblity_points[i].second) continue;
+                if (distance > visiblity_points[i].second.radius) continue;
 
-                if (!rayCast(raylib::Vector2(x * TILE_SIZE, y * TILE_SIZE), visiblity_points[i].first, nullptr)) {
+                if (!rayCast(raylib::Vector2(x * TILE_SIZE + TILE_SIZE / 2, y * TILE_SIZE + TILE_SIZE / 2), visiblity_points[i].first, nullptr)) {
 
-                    visibility = std::max(visibility, visiblity_points[i].second / pow(distance, 2.0));
+                    double brightness = std::min(visiblity_points[i].second.radius / pow(distance, 2.0), 1.0);
+                    color.x += visiblity_points[i].second.color.r * brightness;
+                    color.y += visiblity_points[i].second.color.g * brightness;
+                    color.z += visiblity_points[i].second.color.b * brightness;
                     
-
                 }   
             }
 
+            color = Vector3Clamp(color, Vector3{50, 50, 50}, Vector3{255, 255, 255});
 
-            visibility = std::clamp(visibility, 0.2, 1.0);
-            opacity[y * width + x] += (visibility - opacity[y * width + x]) * 0.1;
+            DrawRectangle(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE, {(unsigned char)color.x, (unsigned char)color.y, (unsigned char)color.z, 255});
 
-            Tile tile = tileSet.getTile(tiles[y * width + x]);
-
-            Texture2D texture = tile.textures[tile.currentTexture];
-
-            DrawTextureEx(texture, {(float)x * TILE_SIZE, (float)y * TILE_SIZE}, 0, TILE_SIZE / texture.width, {255, 255, 255, static_cast<unsigned char>(255 * opacity[y * width + x])});
+            
         }
 
     }
@@ -225,4 +224,30 @@ std::vector<raylib::Vector2> Dungeon::pathFind(raylib::Vector2 start, raylib::Ve
     }
 
     return path;
+}
+
+void Dungeon::render(raylib::Camera2D camera)
+{
+
+    int start_x = ((int)camera.target.x - (int)camera.offset.x) / TILE_SIZE;
+    int start_y = ((int)camera.target.y - (int)camera.offset.y) / TILE_SIZE;
+
+    int end_x = start_x + GetRenderWidth() / TILE_SIZE + 1;
+    int end_y = start_y + GetRenderHeight() / TILE_SIZE + 2;
+    
+    for (int y = start_y; y < end_y; y++) {
+
+        for (int x = start_x; x < end_x; x++) {
+            if (x < 0 || x >= width || y < 0 || y >= height) continue; // TODO: Make this use a clamp function instead of if statements
+            if (tiles[y * width + x] == -1) continue;
+
+            Tile tile = tileSet.getTile(tiles[y * width + x]);
+
+            Texture2D texture = tile.textures[tile.currentTexture];
+
+            DrawTextureEx(texture, {(float)x * TILE_SIZE, (float)y * TILE_SIZE}, 0, TILE_SIZE / texture.width, WHITE);
+        }
+
+    }
+
 }

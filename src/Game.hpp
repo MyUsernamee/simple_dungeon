@@ -71,4 +71,8 @@ class Game {
 
         std::vector<Spell> spells;
 
+        Shader lightShader;
+        RenderTexture2D target;
+        RenderTexture2D lightTarget;
+
 };

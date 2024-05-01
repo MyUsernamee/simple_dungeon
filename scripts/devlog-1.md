@@ -44,4 +44,20 @@ Go as far as you can.
 
 Lets dive into the commit log!
 
-At the start I actually didn't have a game and only a generator
+So let's start by breaking down how I am even going to make this game.
+I decided to use raylib-cpp
+<!-- Show a image of raylib and raylib-cpp -->
+<!-- Show a image of raylib and raylib-cpp -->
+<!-- Display an image showcasing raylib and raylib-cpp -->
+Raylib and raylib-cpp are quite litereally the backbone of the project.
+These projects essentailly do all of the rendering and basic vecctor math etc for our project.
+
+<!-- Display the simplicity of the code -->
+These give us access to functions like these and OMG
+Look at how simple this code is.
+That is literally it for a simple window.
+
+<!-- Explain the initial commits -->
+Our first couple commits really didn't have much only a basic struct for a project.
+
+!-- Show first window

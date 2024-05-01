@@ -65,6 +65,12 @@ struct Animator {
 
 };
 
+struct Glow {
+
+    int radius;
+
+};
+
 struct Player {
 
     raylib::Color color;
@@ -221,13 +227,14 @@ struct ParticleSystem {
 
     Particle particle; // The particle to spawn
     double spawnRate; // The rate to spawn the particles
+    double spawnRadius; // The radius to spawn the particles
     double spawnTimer; // The timer to spawn the particles
-    int maxParticles; // The maximum amount of particles to spawn
+    std::vector<entt::entity> particles; // The particles spawned
 
     template <class Archive>
     void serialize(Archive &archive)
     {
-        archive(CEREAL_NVP(particle), CEREAL_NVP(spawnRate), CEREAL_NVP(spawnTimer), CEREAL_NVP(maxParticles));
+        archive(CEREAL_NVP(particle), CEREAL_NVP(spawnRate), CEREAL_NVP(spawnTimer));
     }
 
 
@@ -245,5 +252,6 @@ struct DungeonOcclusion {
 struct Light {
 
     int radius;
+    raylib::Color color;
 
 };

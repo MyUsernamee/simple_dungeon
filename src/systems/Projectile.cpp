@@ -70,6 +70,7 @@ entt::entity createProjectile(entt::registry &registry, raylib::Vector2 position
     registry.emplace<Collision>(entity, 0b11111111);
     registry.emplace<Size>(entity, raylib::Vector2(10, 10));
     registry.emplace<Renderable>(entity, LoadTextureCached("assets/fireball.png"), raylib::Color{255, 255, 255, 255});
+    registry.emplace<Light>(entity, 32, raylib::Color{255, 125, 0, 255});
     return entity;
 
 

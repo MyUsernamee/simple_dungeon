@@ -12,6 +12,7 @@
 
 #include <utils/utils.hpp>
 #include <entities/DungeonSpider/constructor.hpp>
+#include <entities/BloodAltar/constructor.hpp>
 
 const int HALLWAY_WIDTH = 4;
 
@@ -222,5 +223,8 @@ void generateDungeon(Game* game, int width, int height) {
         entt::entity spider_entity = createDungeonSpider(game->getRegistry(), center * TILE_SIZE);
 
     }
+
+    // Place a blood altar in a random room
+    createBloodAltar(game, room_centers[room_centers.size() - 1] * TILE_SIZE + raylib::Vector2{ TILE_SIZE / 2, TILE_SIZE / 2 });
 
 }

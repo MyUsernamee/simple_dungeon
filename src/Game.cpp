@@ -13,6 +13,7 @@ Game::Game()
     // Initialize the camera
     camera = raylib::Camera2D(raylib::Vector2(GetRenderWidth() / 2, GetRenderHeight() / 2), raylib::Vector2(GetRenderWidth() / 2, GetRenderHeight() / 2), 0.0f, 1.0f);
     registry = entt::registry();
+    lightShader = LoadShader(NULL, "assets/shaders/lighting.fs");
 
     // For stress testing lets add a bunch of entities
     // for (int i = 0; i < 200; i++) {
@@ -33,6 +34,8 @@ Game::Game()
     // createPlayer(registry, raylib::Color(255, 0, 0, 255), -1);
 
     spells = loadSpells();
+    target = LoadRenderTexture(GetRenderWidth(), GetRenderHeight());
+    lightTarget = LoadRenderTexture(GetRenderWidth(), GetRenderHeight());
 
 }
 
@@ -57,7 +60,7 @@ void Game::render()
     camera.BeginMode();
 
 
-    std::vector<std::pair<raylib::Vector2, double>> visibility_points;
+    std::vector<std::pair<raylib::Vector2, Light>> lights;
 
     // We get all lights
     auto _view = registry.view<Light, Position>();
@@ -65,13 +68,17 @@ void Game::render()
     for (auto entity : _view) {
 
         auto& position = _view.get<Position>(entity);
-        visibility_points.push_back({position.position, _view.get<Light>(entity).radius});
+        auto& light = _view.get<Light>(entity);
+
+        lights.push_back({position.position, light});
 
     }
 
+    camera.BeginMode();
+
     // Get the dungeon
     auto dungeon = getDungeon();
-    dungeon.render(camera, visibility_points);
+    dungeon.render(camera);
     
     // Sort the registry by z-index
     registry.sort<Renderable>([](const Renderable& a, const Renderable& b) {
@@ -101,7 +108,7 @@ void Game::render()
             raylib::Rectangle{Position_.position.x - Size_.size.x / 2, Position_.position.y - Size_.size.y / 2, Size_.size.x, Size_.size.y},
             raylib::Vector2{0, 0},
             0.0f,
-            Renderable_.color
+            raylib::Color{Renderable_.color.r, Renderable_.color.g, Renderable_.color.b, Renderable_.opacity}
         );
 
         #ifdef DEBUG
@@ -110,9 +117,46 @@ void Game::render()
 
     }
 
+    // Draw the texture again over the bloom
+    //DrawTextureRec(target.texture, raylib::Rectangle{0, 0, target.texture.width, -target.texture.height}, raylib::Vector2{0, 0}, raylib::Color{255, 255, 255, 255});
+
     spellCasterRenderer(registry);
 
+
     camera.EndMode();
+
+    // Now we render the lights
+    BeginTextureMode(lightTarget);
+    ClearBackground(raylib::Color(50, 50, 50, 255));
+    camera.BeginMode();
+    BeginBlendMode(BLEND_ADDITIVE);
+
+    dungeon.renderLighting(camera, lights);
+
+    // Render glow entities
+    auto glowView = registry.view<Renderable, Position, Size, Glow>();
+
+    
+
+    for (auto entity : glowView) {
+
+        auto& Renderable_ = glowView.get<Renderable>(entity);
+        auto& Position_ = glowView.get<Position>(entity);
+        auto& Size_ = glowView.get<Size>(entity);
+        auto& Glow_ = glowView.get<Glow>(entity);
+
+        DrawCircleGradient(Position_.position.x, Position_.position.y, Glow_.radius, Renderable_.color, raylib::Color{0, 0, 0, 0});
+
+    }
+
+    EndBlendMode();
+    camera.EndMode();
+    EndTextureMode();
+
+    BeginBlendMode(BLEND_MULTIPLIED);
+    DrawTextureRec(lightTarget.texture, raylib::Rectangle{0, 0, lightTarget.texture.width, -lightTarget.texture.height}, raylib::Vector2{0, 0}, raylib::Color{255, 255, 255, 255});
+    EndBlendMode();
+
 
     // Get everyplayer
     for (auto render_system : renderSystems) {

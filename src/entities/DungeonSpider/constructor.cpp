@@ -10,12 +10,12 @@ entt::entity createDungeonSpider(entt::registry & registry, raylib::Vector2 posi
     registry.emplace<Position>(entity, position);
     registry.emplace<Velocity>(entity, raylib::Vector2{0, 0});
     registry.emplace<AI>(entity);
-    registry.emplace<Renderable>(entity, LoadTexture("assets/particles/up.png"), raylib::Color{0, 0, 0, 255});
-    registry.emplace<Size>(entity, raylib::Vector2{16, 16});
+    registry.emplace<Renderable>(entity, LoadTexture("assets/particles/up.png"), raylib::Color{255, 255, 255, 255});
+    registry.emplace<Size>(entity, raylib::Vector2{32, 32});
     registry.emplace<Collision>(entity, 0b1111111111111);
 
-    auto idleAnimation = Animation("assets/SpiderPack/IdlePurple/SpiderIdleFront%d.png");
-    auto walkAnimation = Animation("assets/SpiderPack/WalkingPurple/SpiderWalkingSide%d.png");
+    auto idleAnimation = Animation("assets/Spider/Spider%d.png");
+    auto walkAnimation = Animation("assets/Spider/Spider%d.png");                                                                                                                                       
 
     std::vector<Animation> animations = {idleAnimation, walkAnimation};
 

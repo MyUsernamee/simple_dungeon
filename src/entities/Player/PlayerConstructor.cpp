@@ -34,13 +34,13 @@ entt::entity createPlayer(entt::registry &registry, raylib::Color color, int gam
     registry.emplace<Team>(player, 0b01);
     registry.emplace<SpellCaster>(player, std::vector<CastDirection>());
     registry.emplace<Animator>(player, animations, 0, 0.1f);
-    registry.emplace<Light>(player, 64);
+    //registry.emplace<Light>(player, 64);
 
     auto cursor = registry.create();
     registry.emplace<Position>(cursor, position);
     registry.emplace<Renderable>(cursor, LoadTextureCached("assets/cursor.png"), raylib::Color{255, 255, 255, 255});
-    registry.emplace<Size>(cursor, raylib::Vector2(32, 32));
-    registry.emplace<CameraFollower>(cursor, 1, raylib::Vector2(25, 25));
+    registry.emplace<Size>(cursor, raylib::Vector2(8, 8));
+    registry.emplace<CameraFollower>(cursor, 1, raylib::Vector2(8, 8));
 
     registry.get<Player>(player).cursorEntity = cursor;
 

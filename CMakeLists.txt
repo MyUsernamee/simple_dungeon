@@ -11,6 +11,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_GLIBCXX_USE_CXX11_ABI=0")
 file(COPY assets DESTINATION ${CMAKE_BINARY_DIR})
 
 find_package(raylib 5.0 REQUIRED)
+find_package(Lua REQUIRED)
 
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS src/*.cpp)
 
@@ -22,6 +23,7 @@ include_directories(dependencies/wfc-cpp/src) # Header only library WFC :)
 include_directories(dependencies/delaunator-cpp/include) # Header only library Delaunator :)
 include_directories(dependencies/cereal/include) # Header only library Serialization :)
 include_directories(dependencies/json/include) # Header only library Serialization :)
+include_directories(dependencies/sol2/include) # Header only library Lua :)
 
 # Set it so Wfatal-errors is on by default
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wfatal-errors")
@@ -41,3 +43,4 @@ target_link_libraries(${PROJECT_NAME} raylib)
 target_link_libraries(particle_designer raylib)
 target_link_libraries(tileset_maker raylib)
 target_link_libraries(test_dungeon_generator raylib)
+target_link_libraries(${PROJECT_NAME} lua5.4)

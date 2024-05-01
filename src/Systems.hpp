@@ -26,5 +26,7 @@ void cameraFollowerSystem(Game* game, double dt);
 void spellCastSystem(Game* game, double dt);
 void particleSystemRegistry(entt::registry& registry, double dt);
 void animationSystem(Game* game, double dt);
+void particleSystemSystem(Game* game, double dt); // Werid name lmao
+
 
 std::vector<std::function<void(Game*, double)>> getSystems();
