@@ -8,21 +8,19 @@ std::vector<Spell> loadSpells()
     
     std::vector<Spell> spells;
 
-    // Fireball
+    // Load the fireball spell
     Spell fireball;
     fireball.manaCost = 10;
-    fireball.projectile = {
-        0,
-        600,
-        1000,
-        {0.0, 0.0} // This is the direction, it will be set when the spell is cast
-    };
-    fireball.projectileTexture = LoadTextureCached("assets/particles/up.png");
-    fireball.spellTexture = LoadTextureCached("assets/spells/fireball.png");
-    fireball.castDirections = {CastDirection::UP, CastDirection::RIGHT, CastDirection::DOWN, CastDirection::LEFT};
-    fireball.cast_on_death = false;
-    fireball.castFunction = castFireball;
+    fireball.texture = TextureCache::getTexture("assets/spells/fireball.png");
+    fireball.cast = castFireball;
     spells.push_back(fireball);
+
+    // Load the ice spell
+    Spell ice;
+    ice.manaCost = 10;
+    ice.texture = TextureCache::getTexture("assets/spells/ice.png");
+    ice.cast = castIce;
+    spells.push_back(ice);
 
     return spells;
 

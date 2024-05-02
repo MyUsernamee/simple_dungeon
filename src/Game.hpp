@@ -45,10 +45,6 @@ class Game {
             return camera;
         }
 
-        std::vector<Spell>& getSpells() {
-            return spells;
-        }
-
         // Literally the same things as getting a dungeon from the registry, just a helper
         Dungeon& getDungeon() {
             
@@ -61,6 +57,20 @@ class Game {
 
         }
 
+        // Get the spell cache
+        entt::resource_cache<Spell>& getSpellCache() {
+            return spellCache;
+        }
+
+        entt::resource<Spell> getSpell(entt::id_type id) {
+            return spellCache[id];
+        }
+
+        void registerSpell(const entt::id_type id, Spell spell) {
+            spellCache.load(id, spell);
+        }
+
+
     protected: // Protected so that children that are used for testing can access them
 
         std::vector<std::function<void(Game* game, double dt)>> systems;
@@ -69,10 +79,10 @@ class Game {
         entt::registry registry;
         raylib::Camera2D camera;
 
-        std::vector<Spell> spells;
-
         Shader lightShader;
         RenderTexture2D target;
         RenderTexture2D lightTarget;
+
+        entt::resource_cache<Spell> spellCache; // Stores all spells
 
 };

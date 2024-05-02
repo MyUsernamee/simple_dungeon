@@ -11,6 +11,7 @@ void statsRenderer(Game* game, double dt)
     int offset = 0;
 
     int box_width = GetRenderWidth() / 4;
+    int box_height = 128;
 
     for (auto entity : view) {
         
@@ -20,15 +21,19 @@ void statsRenderer(Game* game, double dt)
         auto& mana = view.get<SpellCaster>(entity);
         auto& renderable = view.get<Renderable>(entity);
 
-        DrawRectangle(offset * box_width, 0, box_width, 100, RED);
-        DrawText(std::to_string(health.health).c_str(), offset * box_width + 10, 10, 20, WHITE);
-        DrawText("Health", offset * box_width + 10, 40, 20, WHITE);
+        // Draw a bubble around the player icon
+        DrawCircleLines(offset + box_height / 2, box_height / 2, box_height / 2, GRAY); // TODO: Replace with color map
+        DrawTexturePro
+        (
+            renderable.texture,
+            Rectangle{0, 0, (float)renderable.texture.width, (float)renderable.texture.height},
+            Rectangle{(float)offset + box_height / 4, (float)box_height / 4, (float)box_height / 2, (float)box_height / 2},
+            Vector2{0, 0},
+            0,
+            renderable.color
+        );
+        
 
-        DrawRectangle(offset * box_width, 100, box_width, 100, BLUE);
-        DrawText(std::to_string(mana.mana).c_str(), offset * box_width + 10, 110, 20, WHITE);
-        DrawText("Mana", offset * box_width + 10, 140, 20, WHITE);
-
-        DrawTexture(renderable.texture, offset * box_width + 10, 60, renderable.color);
 
         offset++;
 

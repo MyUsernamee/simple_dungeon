@@ -12,10 +12,11 @@ TODO: Fix UI.
 TODO: Add mana upgrades or wand system.
 TODO: Implement getting to the next floor.
 TODO: Implement room generation or make rooms more extesible so each room can have a purpose.
-TODO: FIX LIGHTING SYSTEM.
+TODO: FIX LIGHTING SYSTEM. DONE!
 TODO: Add blood experience and upgrade system.
 TODO: Add health visualization
     Note: Red flashes indicated how dead.
+TODO: Rework Spell system.
 TODO: Fix Ui.
 TODO: Reorganize and make a entities folder. DONE!
 TODO: Implement extensible AI DONE!

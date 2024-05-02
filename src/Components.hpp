@@ -76,6 +76,7 @@ struct Player {
     raylib::Color color;
     int gamepad; // -1 if no gamepad
     entt::entity cursorEntity;
+    
 
 
 
