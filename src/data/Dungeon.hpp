@@ -1,5 +1,6 @@
 #include "utils/TileSet.hpp"
 #include "Components.hpp"
+#include "tmxlite/Tileset.hpp"
 
 #pragma once
 

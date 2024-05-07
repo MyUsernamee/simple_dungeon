@@ -12,6 +12,7 @@ file(COPY assets DESTINATION ${CMAKE_BINARY_DIR})
 
 find_package(raylib 5.0 REQUIRED)
 find_package(Lua REQUIRED)
+add_subdirectory(dependencies/tmxlite/tmxlite)
 
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS src/*.cpp)
 
@@ -24,6 +25,7 @@ include_directories(dependencies/delaunator-cpp/include) # Header only library D
 include_directories(dependencies/cereal/include) # Header only library Serialization :)
 include_directories(dependencies/json/include) # Header only library Serialization :)
 include_directories(dependencies/sol2/include) # Header only library Lua :)
+include_directories(dependencies/tmxlite/tmxlite/include) # Header only library TMX :)
 
 # Set it so Wfatal-errors is on by default
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wfatal-errors")

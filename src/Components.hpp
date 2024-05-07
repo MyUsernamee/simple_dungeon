@@ -2,8 +2,6 @@
 
 #include <raylib-cpp.hpp>
 #include <entt/entt.hpp>
-#include "renderers/Renderer.hpp"
-#include "spells/CastDirection.hpp"
 
 #include <cereal/cereal.hpp>
 
@@ -55,6 +53,12 @@ struct Renderable {
 
 };
 
+struct UiElement: public Renderable {
+
+    
+
+};
+
 struct Animator {
 
     std::vector<Animation> animations;
@@ -76,8 +80,7 @@ struct Player {
     raylib::Color color;
     int gamepad; // -1 if no gamepad
     entt::entity cursorEntity;
-    
-
+    double blood = 0; // XP
 
 
 };
@@ -140,7 +143,7 @@ struct CameraFollower {
 
 struct Health {
 
-    Health(int health, int maxHealth) : health(health), maxHealth(maxHealth) {}
+    Health(int health, int maxHealth, std::optional<std::function<void(Game* game, entt::entity entity)>> onDeath = std::nullopt) : health(health), maxHealth(maxHealth), onDeath(onDeath) {}
 
     int health;
     int maxHealth;
@@ -154,6 +157,8 @@ struct Health {
         }
     }
 
+    std::optional<std::function<void(Game* game, entt::entity entity)>> onDeath;
+
 };
 
 /**
@@ -161,18 +166,11 @@ struct Health {
 */
 struct SpellCaster {
 
-    std::vector<CastDirection> currentCastDirections; // The current cast directions for the spell
     double mana = 100; // The mana of the spell caster
     double maxMana = 100; // The maximum mana of the spell caster
+    double manaRegen = 10; // The rate at which the mana regenerates
 
-    /**
-     * @brief Adds a cast direction to the current cast directions and spawns particles.
-     * @param registry The registry to spawn the particles in.
-     * @param position The position to spawn the particles at.
-     * @param direction The direction to add to the current cast directions.
-    */
-    void addCastDirection(entt::registry &registry, raylib::Vector2 position, CastDirection direction); // Add a cast direction to the current cast directions and spawn particles
-    void cast(Game* game, entt::entity entity, raylib::Vector2 direction); // Cast the spell
+    void cast(Game* game, entt::entity entity, raylib::Vector2 direction, entt::id_type spellId); // Cast a spell from the game spellCache
 
 };
 

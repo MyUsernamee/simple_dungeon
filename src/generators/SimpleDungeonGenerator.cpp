@@ -13,6 +13,7 @@
 #include <utils/utils.hpp>
 #include <entities/DungeonSpider/constructor.hpp>
 #include <entities/BloodAltar/constructor.hpp>
+#include <entities/Candle/constructor.hpp>
 
 const int HALLWAY_WIDTH = 4;
 
@@ -219,9 +220,24 @@ void generateDungeon(Game* game, int width, int height) {
         // game->getRegistry().emplace<Light>(light_entity, 32);
         // game->getRegistry().emplace<Position>(light_entity, center * TILE_SIZE);
 
-        // Create a dungeon spider in the room
-        entt::entity spider_entity = createDungeonSpider(game->getRegistry(), center * TILE_SIZE);
+        // Create a 32 dungeon spider in the room
+        createDungeonSpider(game->getRegistry(), center * TILE_SIZE + raylib::Vector2{ TILE_SIZE / 2, TILE_SIZE / 2 });
 
+        
+
+    }
+
+    // Place 32 candle randomly in the dungeon
+    for (int i = 0; i < 32; i++) {
+        while (true) {
+            int x = GetRandomValue(0, width);
+            int y = GetRandomValue(0, height);
+
+            if (tiles[x + y * width] == 0) {
+                createCandle(game, raylib::Vector2{ x * TILE_SIZE + TILE_SIZE / 2, y * TILE_SIZE + TILE_SIZE / 2 });
+                break;
+            }
+        }
     }
 
     // Place a blood altar in a random room

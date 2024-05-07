@@ -43,7 +43,7 @@ void collisionSystem(Game* game, double dt)
             auto center = position.position;
             auto otherCenter = otherPosition.position;
 
-            if (center.Distance(otherCenter) < (size.size.x + otherSize.size.x) / 2.0 && collision.bitMask & otherCollision.bitMask) {
+            if (center.DistanceSqr(otherCenter) < powf((size.size.x + otherSize.size.x) / 2.0, 2.0) && (collision.bitMask & otherCollision.bitMask) > 0) {
 
 
                 raylib::Vector2 resolution = center - otherCenter;

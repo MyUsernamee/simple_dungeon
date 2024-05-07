@@ -5,7 +5,11 @@
 enum InputAction { 
     INTERACT, // TODO: Add more actions
     ATTACK,
-    AIM
+    AIM,
+    UP,
+    DOWN,
+    LEFT,
+    RIGHT
 };
 
 raylib::Vector2 getMovementVector(int gamepad) {
@@ -79,6 +83,10 @@ bool isActionDown(int gamepad, InputAction action) {
 
         if (action == INTERACT) return IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_RIGHT_FACE_DOWN);
         if (action == ATTACK) return IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_RIGHT_FACE_RIGHT);
+        if (action == UP) return IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_LEFT_FACE_UP);
+        if (action == DOWN) return IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_LEFT_FACE_DOWN);
+        if (action == LEFT) return IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_LEFT_FACE_LEFT);
+        if (action == RIGHT) return IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_LEFT_FACE_RIGHT);
 
     }
     else {
@@ -113,34 +121,5 @@ bool isActionPressed(int gamepad, InputAction action) {
     }
 
     return false;
-
-}
-
-CastDirection getCastDirection(int gamepad) {
-
-    if (gamepad == -1) {
-
-        if (IsKeyPressed(KEY_UP)) return CastDirection::UP; // TODO: Create a key map / joystick map
-        if (IsKeyPressed(KEY_DOWN)) return CastDirection::DOWN;
-        if (IsKeyPressed(KEY_LEFT)) return CastDirection::LEFT;
-        if (IsKeyPressed(KEY_RIGHT)) return CastDirection::RIGHT;
-
-    }
-
-    if (IsGamepadAvailable(gamepad)) {
-        
-        if (IsGamepadButtonPressed(gamepad, GAMEPAD_BUTTON_LEFT_FACE_UP)) return CastDirection::UP;
-        if (IsGamepadButtonPressed(gamepad, GAMEPAD_BUTTON_LEFT_FACE_DOWN)) return CastDirection::DOWN;
-        if (IsGamepadButtonPressed(gamepad, GAMEPAD_BUTTON_LEFT_FACE_LEFT)) return CastDirection::LEFT;
-        if (IsGamepadButtonPressed(gamepad, GAMEPAD_BUTTON_LEFT_FACE_RIGHT)) return CastDirection::RIGHT;
-
-    }
-    else {
-
-        TraceLog(LOG_WARNING, "Gamepad %i not available", gamepad);
-
-    }
-
-    return CastDirection::NONE;
 
 }

@@ -4,7 +4,6 @@
 #include "Systems.hpp"
 #include "Components.hpp"
 #include "Constructors.hpp"
-#include "renderers/SpellCasterRenderer.hpp"
 //#define DEBUG
 
 Game::Game()
@@ -33,7 +32,7 @@ Game::Game()
 
     // createPlayer(registry, raylib::Color(255, 0, 0, 255), -1);
 
-    spells = loadSpells();
+    loadSpells(this);
     target = LoadRenderTexture(GetRenderWidth(), GetRenderHeight());
     lightTarget = LoadRenderTexture(GetRenderWidth(), GetRenderHeight());
 
@@ -84,7 +83,6 @@ void Game::render()
     registry.sort<Renderable>([](const Renderable& a, const Renderable& b) {
         return a.z < b.z;
     });
-
     // We then iterate over all entities with a Renderable component
     auto view = registry.view<Renderable, Position, Size>();
 
@@ -119,8 +117,6 @@ void Game::render()
 
     // Draw the texture again over the bloom
     //DrawTextureRec(target.texture, raylib::Rectangle{0, 0, target.texture.width, -target.texture.height}, raylib::Vector2{0, 0}, raylib::Color{255, 255, 255, 255});
-
-    spellCasterRenderer(registry);
 
 
     camera.EndMode();

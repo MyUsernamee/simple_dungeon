@@ -2,6 +2,7 @@
 #include "Constructors.hpp"
 #include "Components.hpp"
 #include "utils/TextureCache.hpp"
+#include "Game.hpp"
 
 entt::entity createPlayer(entt::registry &registry, raylib::Color color, int gamepad, raylib::Vector2 position)
 {
@@ -30,9 +31,8 @@ entt::entity createPlayer(entt::registry &registry, raylib::Color color, int gam
     registry.emplace<Collision>(player, 0b1);
     registry.emplace<Player>(player, color, gamepad);
     registry.emplace<CameraFollower>(player, 1, raylib::Vector2(25, 25));
-    registry.emplace<Health>(player, 100, 100);
     registry.emplace<Team>(player, 0b01);
-    registry.emplace<SpellCaster>(player, std::vector<CastDirection>());
+    registry.emplace<SpellCaster>(player);
     registry.emplace<Animator>(player, animations, 0, 0.1f);
     //registry.emplace<Light>(player, 64);
 
@@ -43,6 +43,13 @@ entt::entity createPlayer(entt::registry &registry, raylib::Color color, int gam
     registry.emplace<CameraFollower>(cursor, 1, raylib::Vector2(8, 8));
 
     registry.get<Player>(player).cursorEntity = cursor;
+
+    registry.emplace<Health>(player, 100, 100, 
+        [player](Game* game, entt::entity entity)
+        {
+            auto &player_component = game->getRegistry().get<Player>(player);
+            game->getRegistry().destroy(player_component.cursorEntity);
+        });
 
     if (count > 2)
     {

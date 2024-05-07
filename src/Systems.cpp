@@ -14,6 +14,7 @@ std::vector<std::function<void(Game*, double)>> getSystems() {
     systems.push_back(particleSystem);
     systems.push_back(animationSystem);
     systems.push_back(particleSystemSystem);
+    systems.push_back(spellCastSystem);
 
     return systems;
 }

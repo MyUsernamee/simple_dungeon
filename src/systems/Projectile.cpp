@@ -19,7 +19,7 @@ void projectileSystem(Game* game, double dt)
 
         velocity.velocity = projectile.direction.Normalize() * projectile.speed;
 
-        projectile.lifeTime--;
+        projectile.lifeTime -= dt;
         if (projectile.lifeTime <= 0)
         {
             registry.destroy(entity);

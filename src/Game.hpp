@@ -4,7 +4,6 @@
 #include "data/Dungeon.hpp"
 #include "unordered_map"
 #include "spells/Spell.hpp"
-#include "spells/CastDirection.hpp"
 
 #pragma once
 
@@ -58,15 +57,15 @@ class Game {
         }
 
         // Get the spell cache
-        entt::resource_cache<Spell>& getSpellCache() {
+        entt::resource_cache<Spell*>& getSpellCache() {
             return spellCache;
         }
 
-        entt::resource<Spell> getSpell(entt::id_type id) {
+        entt::resource<Spell*> getSpell(entt::id_type id) {
             return spellCache[id];
         }
 
-        void registerSpell(const entt::id_type id, Spell spell) {
+        void registerSpell(const entt::id_type id, Spell* spell) {
             spellCache.load(id, spell);
         }
 
@@ -74,6 +73,8 @@ class Game {
     protected: // Protected so that children that are used for testing can access them
 
         std::vector<std::function<void(Game* game, double dt)>> systems;
+        // The order of rendering systems is guaranteed by the order of insertion
+        // All systems are rendered after all entities.
         std::vector<std::function<void(Game* game, double dt)>> renderSystems;
 
         entt::registry registry;
@@ -83,6 +84,6 @@ class Game {
         RenderTexture2D target;
         RenderTexture2D lightTarget;
 
-        entt::resource_cache<Spell> spellCache; // Stores all spells
+        entt::resource_cache<Spell*> spellCache; // Stores all spells
 
 };

@@ -16,6 +16,10 @@ void healthSystem(Game* game, double dt)
 
         if (health.health <= 0)
         {
+            if (health.onDeath.has_value())
+            {
+                health.onDeath.value()(game, entity);
+            }
             registry.destroy(entity);
         }
     }

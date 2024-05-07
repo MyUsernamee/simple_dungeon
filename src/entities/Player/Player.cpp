@@ -8,6 +8,10 @@
 #include "Game.hpp"
 #include <algorithm>
 
+#include <entt/entt.hpp>
+
+using namespace entt::literals;
+
 void playerSystem(Game* game, double dt)
 {
 
@@ -46,18 +50,11 @@ void playerSystem(Game* game, double dt)
         cursorPosition.position = center + aim * 100.0; // TODO: Make this a constant / variable
 
         cursorRenderable.opacity = 255 * std::min(aim.Length(), 1.0f);
+        SetGamepadVibration(player.gamepad, std::min(aim.Length(), 1.0f), std::min(aim.Length(), 1.0f));
 
-        if (isActionPressed(player.gamepad, ATTACK))
+        if (isActionDown(player.gamepad, InputAction::ATTACK))
         {
-            spellCaster.cast(game, entity, aim);
-        }
-
-        CastDirection castDirection = getCastDirection(player.gamepad);
-
-        if (castDirection != CastDirection::NONE)
-        {
-            spellCaster.addCastDirection(registry, position.position, castDirection);
-            SetGamepadVibration(player.gamepad, 0.25 * spellCaster.currentCastDirections.size(), 0.25 * spellCaster.currentCastDirections.size());
+            spellCaster.cast(game, entity, aim, "basic"_hs);
         }
 
         if (movement.Length() > 0)

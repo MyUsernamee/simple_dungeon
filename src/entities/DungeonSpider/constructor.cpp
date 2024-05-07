@@ -12,7 +12,8 @@ entt::entity createDungeonSpider(entt::registry & registry, raylib::Vector2 posi
     registry.emplace<AI>(entity);
     registry.emplace<Renderable>(entity, LoadTexture("assets/particles/up.png"), raylib::Color{255, 255, 255, 255});
     registry.emplace<Size>(entity, raylib::Vector2{32, 32});
-    registry.emplace<Collision>(entity, 0b1111111111111);
+    registry.emplace<Collision>(entity, 0b11);
+    registry.emplace<Health>(entity, 10, 10);
 
     auto idleAnimation = Animation("assets/Spider/Spider%d.png");
     auto walkAnimation = Animation("assets/Spider/Spider%d.png");                                                                                                                                       
