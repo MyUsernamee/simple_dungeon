@@ -9,13 +9,10 @@
 
 using namespace entt::literals; // TODO: REMOVE ME PLEASE
 
-void SpellCaster::cast(Game * game, entt::entity entity, raylib::Vector2 direction, entt::id_type spellId)
+void SpellCaster::cast(Game * game, entt::entity entity, raylib::Vector2 direction, Spell* spell)
 {
 
-    auto &registry = game->getRegistry();
-    auto &spellCache = game->getSpellCache();
-
-    auto spell = *spellCache[spellId];
+    auto& registry = game->getRegistry();
 
     if (mana < spell->manaCost)
     {

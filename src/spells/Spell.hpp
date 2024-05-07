@@ -17,6 +17,7 @@ class Spell {
 
         // Casts the spell in the given direction.
         virtual void cast(Game* game, entt::entity entity, raylib::Vector2 direction) = 0;
+        virtual void mutate(); // Causes the stats of the spell to change randomly
 
         // TODO: Add other vital data like the name and basic texture that represents the spell.
 

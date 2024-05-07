@@ -170,7 +170,7 @@ struct SpellCaster {
     double maxMana = 100; // The maximum mana of the spell caster
     double manaRegen = 10; // The rate at which the mana regenerates
 
-    void cast(Game* game, entt::entity entity, raylib::Vector2 direction, entt::id_type spellId); // Cast a spell from the game spellCache
+    void cast(Game* game, entt::entity entity, raylib::Vector2 direction, Spell* spell); // Cast a spell from the game spellCache
 
 };
 
